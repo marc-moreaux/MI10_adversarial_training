@@ -1,0 +1,294 @@
+
+\section{Softmax} 
+\label{sec:softmax}
+
+	We now study the softmax network. Softmax network is a generalization of logistic regression with a sigmoid transfer function. 
+	The softmax network, or better said, the softmax layer, outputs a vector summing to one. 
+
+	Here also we consider $x_i \in \mathbb{R}^m$, the input samples from the set $X$ of size $n$ and $y_i$, the output samples from the set $Y$ of size $n$. The output samples correspond in an integer representing the class of the input. We consider there is $k$ possible classes.
+
+	Considering a softmax layer of size $K$ and with $L$ inputs, the softmax function for a neuron $x$ of the layer is defined as follows :
+	$$ \text{softmax}(z_{x}) = \sigma(z_{x}) = \frac{e^{z_{x}}}{\sum_{k\in K} e^{z_k}} $$
+	The division by the sum of exponentials permits to have the layer summing up to one. For this reason, we can consider the softmax layer to be a normalized output (throughout the layer) of each of the exponential of the $K$ inputs. 
+
+	On the network visible on \fref{fig:softmax}, the signal propagates as follows : First, the input $x_i$ is multiplied with a weight $w_k$, which result in $z_k$, then $\sigma{z_k}$ is computed. 
+
+	\subsection{Softmax derivatives}
+		To be able to apply the gradient descent we compute the derivatives of the softmax. Two cases have to be considered. 
+		\begin{itemize}
+			\item When we derive $\sigma(z_l)$ with respect to $z_l$.
+			\begin{equation} \label{eq:grad_sima_zk1}
+				\begin{split}
+					\frac{\partial \sigma(z_l)}{\partial z_l} 
+					&= \frac{ e^{z_l} \sum_{k} e^{z_k} - e^{z_l} e^{z_l}}{ (\sum_{k} e^{z_k})^2 } \\
+					&= \frac{ e^{z_l} \sum_{k} e^{z_k} }{ (\sum_{k} e^{z_k})^2 } - \frac{ (e^{z_l})^2 }{ (\sum_{k} e^{z_k})^2 }\\
+					&= \sigma(z_l) - \sigma(z_l)^2 \\
+					&= \sigma(z_l)(1-\sigma(z_l))
+				\end{split}
+			\end{equation}
+
+			\item When we derive $\sigma(z_l)$ with respect to any of the other $z_{k}$ inputs ($k != l$).
+			\begin{equation} \label{eq:grad_sima_zk}
+				\begin{split}
+					\frac{\partial \sigma(z_l)}{\partial z_{k}}
+					&= \frac{ - e^{z_l} e^{z_{k}}}{ (\sum_{k} e^{z_k})^2 } \\
+					&= - \frac{ e^{z_l} }{ \sum_{k} e^{z_k} } \frac{ e^{z_{k}} }{ \sum_{k} e^{z_k} }\\
+					&= - \sigma(z_l)\sigma(z_{k})
+				\end{split}
+			\end{equation}
+		\end{itemize}
+
+
+	\subsection{Cost function}
+		The formulation of the cost function we use with the softmax function depends on the format of the output. The outputs can either be a number representing an index of the true prediction or a binary vector with $K$ values and a single "1" value representing the true prediction.
+
+		Even though the MNIST \footnote{WTF MNIST} dataset is given with an integer valued output representing the index of the output. We will use the binary representation as it shrinks the notation:
+
+		\begin{equation} \label{eq:cost_sigma}
+			\begin{split}
+				\text{Cost}^i = - \sum_x \left[ y^i_x \log (\hat{y}^i_x) \right]
+			\end{split}
+		\end{equation}
+
+		Where $\hat{y}_i$ is our prediction (the softmax function) and $1\{k=y_i\}$ is equal to $1$ if the condition in the bracket is true, and $0$ otherwise. This equation \ref{eq:cost_sigma} shows that the cost of sample $i$ only depends on our prediction to be correct. 
+
+	\subsection{Gradient descent}
+		To apply the gradient descent algorithm, we compute the derivative of the cost function with respect to the inputs. To improve the readability, we use the term $z_k = w_k^T x$ and $\hat{y}^i_k = \sigma(z^i_{k})$.
+
+		\begin{equation} \label{eq:grad_cost_sigma}
+			\begin{split}
+				\frac{\partial \text{Cost}}{\partial z_k}
+				&= - \sum_x \left[ \frac{y_x}{\hat{y}_x} \frac{\partial \hat{y}_x}{\partial z_k} \right]  \\
+				&= \sum_{x!=k} \left[ - \frac{y_x}{\hat{y}_x} \frac{\partial \hat{y}_x}{\partial z_k} \right]  - \frac{y_k}{\hat{y}_{k}} \frac{\partial \hat{y}_k}{\partial z_k} \\
+				&= \sum_{x!=k} \left[ - \frac{y_x}{\hat{y}_x} (-\hat{y}_k \hat{y}_x) \right]  - \frac{y_k}{\hat{y}_k} \hat{y}_k (1 - \hat{y}_k) \\
+				&= \sum_{x!=k} \left[ y_x \hat{y}_k \right]  - y_k + y_k \hat{y}_k \\
+				&= \sum_x \left[ y_x \hat{y}_k \right]  - y_k \\
+				&= \hat{y}_k \left[ \sum_k y_x \right]  - y_k \\
+				&= \hat{y}_k - y_k
+			\end{split}
+		\end{equation}
+
+		Putting back the sample index $i$ and deriving the cost with respect to the weights $w_k$:
+		\begin{equation} \label{eq:grad_cost_sigma_w}
+			\begin{split}
+				\frac{\partial \text{Cost}^i}{\partial w_k}
+				&= \frac{\partial \text{Cost}^i}{\partial z_k} \frac{\partial z_k}{\partial w_k} \\
+				&= (\hat{y}^i_k - y^i_k) x^i_k \\
+			\end{split}
+		\end{equation}
+
+
+
+		\begin{figure}
+			\centering
+			\def\layersep{2cm}	
+			\begin{tikzpicture}[shorten >=1pt,->,draw=black!50, node distance=\layersep]
+			    \tikzstyle{every pin edge}=[<-,shorten <=1pt]
+			    \tikzstyle{neuron}=[circle,fill=black!25,minimum size=17pt,inner sep=0pt]
+			    \tikzstyle{annot} = [text width=6em, text centered]
+			    \tikzstyle{annot2} = [text width=1em, text centered]
+
+
+			    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+			    %%% DRAW THE NODES
+			    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+			    \foreach \name / \y in {1,...,5,7}
+			        \node[neuron] (I-\name) at (0,-\y) {};
+			    \foreach \name / \y in {6}
+			    	\node[      ] (I-\name) at (0,-\y) {...};
+
+
+			    \foreach \name / \y in {1,2}
+					\node[] (T-\y) at (\layersep*2,-\y-1) {$z_\y$};
+			    \foreach \name / \y in {4}
+					\node[] (T-\y) at (\layersep*2,-\y-1) {$z_x$};
+
+				
+				\foreach \name / \y in {1,2,4}
+					\node[neuron] (O-\y) at (\layersep*3,-\y-1) {};
+				
+				\node[annot2] at (\layersep*3+1.5em,-2) {$\sigma(z_1)$};
+				\node[annot2] at (\layersep*3+1.5em,-3) {$\sigma(z_2)$};
+				\node[annot2] at (\layersep*3+1.5em,-5) {$\sigma(z_x)$};
+
+				\node[]       ()    at (\layersep*3,-3-1) {...};
+				
+
+
+			    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+			    %%% DRAW THE PATHS
+			    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+			    \foreach \source in {1,...,5,7}
+			        \foreach \dest in {1,2,4}
+			            \path (I-\source) edge (T-\dest);
+
+			    \foreach \source in {1,2,4}
+			        \path (T-\source) edge (O-\source);
+
+
+			    % Annotate the layers
+			    \node[annot,above of=I-1, node distance=1cm] (iv) {Input vector $x^i \in \mathbb{R}^{m_1}$};
+			    \node[annot,right of=iv] (void) {};
+			    \node[annot,right of=void] (z) {$z_x = w_x^T x^i$};
+			    \node[annot,right of=z] {Softmax layer};
+
+			\end{tikzpicture}
+			\label{fig:softmax}
+			\caption{Feed-forward neural network with two hidden layers}
+		\end{figure}
+
+
+
+	\subsection{Adversarial learning}
+		In section \ref{sec:} we saw the perturbation:
+		$$ w^T\tilde{x} = w^Tx + w^T\eta $$
+		$$ \eta = \epsilon(\text{sign}(\nabla_x \text{Cost}(w,x,y))) $$
+
+		For the softmax function, the gradient of its cost with respect to the inputs $x^i$ (written below $x$ to simplify the reading) is explained on figure \fref{fig:adversarial_softmax}. As a result, the examples we train are no more $w^T_k x_k$ but their adversarial equivalences $w^T_k \tilde{x}_k$ which depends on the true prediction of the sample.
+
+		When the sample's output is 
+
+
+		\begin{figure}
+			\centering
+
+			\begin{equation}
+				\begin{split}
+					\text{sign}\left( \frac{\partial \text{Cost}}{\partial x_k} \right)
+					&= \text{sign}\left( \frac{\partial \text{Cost}}{\partial z_k} \frac{\partial z_k}{\partial x_k} \right)\\
+					&= \text{sign}\left( (\hat{y}_l - y_l) w_k \right)\\
+				\end{split}
+			\end{equation}
+
+			\begin{tabular}{c||c|c}
+				& if $y_l = 0$ & if $y_l = 1$ \\
+				\hline
+				\hline
+
+				$ \text{sign}\left( (\hat{y}_l - y_l) w_k \right) $ &
+				\parbox{12em}{
+					\begin{equation}
+						\begin{split}
+							&  \text{sign}\left( (\hat{y}_l - 0) w_k \right) \\
+							&= \text{sign}\left( (\hat{y}_l) w_k \right) \\
+							&= \text{sign}\left( (a) w_k \right) * \\
+							&= \text{sign}\left( w_k \right) \\
+						\end{split}
+					\end{equation}
+				} & \parbox{12em}{
+				\begin{equation}
+					\begin{split}
+						&  \text{sign}\left( (\hat{y}_l -1) w_k \right) \\
+						&= \text{sign}\left( (a-1) w_k \right) *\\
+						&= \text{sign}\left( - w_k \right) \\
+						&= - \text{sign}\left( w_k \right)
+					\end{split}
+				\end{equation}
+				}\\
+				\hline
+
+				$ w^T_k \tilde{x}_k $  &
+				\parbox{12em}{
+					$$ = w^T_k x + \epsilon w^T_k \text{sign}(w^T_k) $$
+					$$ = w^T_k x + \epsilon \norm{w^T_k}_1 $$ }
+				&
+				\parbox{12em}{
+					$$ = w^T_k x - \epsilon w^T_k \text{sign}(w^T_k) $$
+					$$ = w^T_k x - \epsilon \norm{w^T_k}_1 $$ }
+
+
+			\end{tabular} \\ 
+			* a is a variable bounded between zero and one : $a\in[0,1]$ \\
+			\label{fig:adversarial_softmax}
+		\end{figure}
+
+
+		\begin{table}[h]
+		\centering
+		%     \begin{adjustbox}{width=\textwidth,center}
+		    % \begin{adjustbox}{center}
+		        \begin{tabular}{cc||ccccc}
+
+		        	& &  \multicolumn{5}{c}{learning epsilon} \\
+		        	& &  $.0$ & $.1$ & $.2$ & $.25$ & $.3$ \\
+		            \hline \hline
+		            \multirow{8}{*}{adversarial dataset} 
+		            	& \multirow{2}{*}{$.0$} & $07,57\%$ & $12,94\%$ & $12,41\%$ & $13,48\%$ & $12,04\%$ \\ 
+		            	&                       & $0.2757$  & $0.4640$  & $0.4969$  & $0.5751$  & $0.5246$  \\ \cline{2-7} 
+		            	& \multirow{2}{*}{$.1$} & $16,46\%$ & $14,51\%$ & $14,34\%$ & $13,48\%$ & $14,02\%$ \\ 
+		            	&                       & $2.6107$  & $0.5485$  & $0.5775$  & $0.5751$  & $0.6300$  \\ \cline{2-7} 
+		            	& \multirow{2}{*}{$.2$} & $16,49\%$ & $18,09\%$ & $18,64\%$ & $18,45\%$ & $17,26\%$ \\
+		            	&                       & $5.5083$  & $0.8486$  & $0.8872$  & $0.8805$  & $1.0016$  \\ \cline{2-7}
+		                & \multirow{2}{*}{$.3$} & $16,50\%$ & $19,99\%$ & $20,61\%$ & $21,28\%$ & $19,00\%$ \\
+		                &                       & $8.4112$  & $1.2497$  & $1.3079$  & $1.3155$  & $1.4784$  \\
+		            
+		        \end{tabular}
+		%     \end{adjustbox}
+		%     \vspace{ - 05 mm}
+		    \caption{xxx}
+		    \label{tab:xxx}
+		\end{table}
+
+
+
+		\begin{table}[h]
+		\centering
+		%     \begin{adjustbox}{width=\textwidth,center}
+		    % \begin{adjustbox}{center}
+		        \begin{tabular}{cc||ccccc}
+
+		        	& &  \multicolumn{5}{c}{learning epsilon} \\
+		        	& &  $.0$ & $.1$ & $.2$ & $.25$ & $.3$ \\
+		            \hline \hline
+		            \multirow{8}{*}{adversarial dataset} 
+		            	& \multirow{2}{*}{$.0$}  &$0.2674	$&$0.5945	$&$1.2396	$&$1.6602	$&$1.9828	$   \\ 
+		            	&                        &$7.50\%	$&$15.40\%	$&$26.08\%	$&$35.60\%	$&$49.83\%	$   \\ \cline{2-7} 
+		            	& \multirow{2}{*}{$.007$}&$0.2562	$&$0.6196	$&$1.2525	$&$1.6671	$&$1.9861	$   \\ 
+		            	&                        &$7.23\%	$&$16.41\%	$&$26.91\%	$&$36.87\%	$&$50.18\%	$   \\ \cline{2-7} 
+		            	& \multirow{2}{*}{$.1$}  &$1.2004	$&$0.6570	$&$1.2021	$&$1.6193	$&$1.9609	$   \\
+		            	&                        &$16.34\%	$&$20.20\%	$&$31.33\%	$&$41.26\%	$&$53.58\%	$   \\ \cline{2-7}
+		                & \multirow{2}{*}{$.2$}  &$2.6758	$&$0.8333	$&$1.2042	$&$1.5900	$&$1.9401	$   \\
+		                &                        &$16.65\%	$&$26.30\%	$&$37.80\%	$&$47.05\%	$&$57.80\%	$   \\ \cline{2-7}
+		                & \multirow{2}{*}{$.25$} &$3.4197	$&$0.9563	$&$1.2231	$&$1.5833	$&$1.9320	$   \\
+		                &                        &$16.71\%	$&$28.90\%	$&$40.75\%	$&$49.61\%	$&$59.68\%	$   \\ \cline{2-7}
+		                & \multirow{2}{*}{$.3$}  &$4.1649	$&$1.0951	$&$1.2518	$&$1.5816	$&$1.9255	$   \\
+		                &                        &$16.75\%	$&$30.73\%	$&$43.27\%	$&$51.99\%	$&$61.47\%	$   \\
+
+		            
+		        \end{tabular}
+		%     \end{adjustbox}
+		%     \vspace{ - 05 mm}
+		    \caption{xxx}
+		    \label{tab:xxx}
+		\end{table}
+
+		\begin{table}[h]
+		\centering
+		%     \begin{adjustbox}{width=\textwidth,center}
+		    % \begin{adjustbox}{center}
+		        \begin{tabular}{cc||ccccc}
+
+		        	& &  \multicolumn{5}{c}{learning epsilon} \\
+		        	& &  $.0$ & $.1$ & $.2$ & $.25$ & $.3$ \\
+		            \hline \hline
+		            \multirow{8}{*}{adversarial dataset} 
+		            	& \multirow{2}{*}{$.0$}  & $0.1563	$ &$0.9888	$ &$1.3617	$ &$1.5300	$ &$1.6247	$  \\ 
+		            	&                        & $4.76\%	$ &$20.69\%	$ &$31.73\%	$ &$37.24\%	$ &$42.09\%	$  \\ \cline{2-7} 
+		            	& \multirow{2}{*}{$.007$}& $0.1447	$ &$1.0120	$ &$1.4868	$ &$1.7023	$ &$1.6666	$  \\ 
+		            	&                        & $4.18\%	$ &$21.84\%	$ &$29.52\%	$ &$35.60\%	$ &$35.27\%	$  \\ \cline{2-7} 
+		            	& \multirow{2}{*}{$.1$}  & $0.4815	$ &$1.0845	$ &$1.5072	$ &$1.6915	$ &$1.6499	$  \\
+		            	&                        & $15.35\%	$ &$26.36\%	$ &$40.01\%	$ &$44.58\%	$ &$44.17\%	$  \\ \cline{2-7}
+		                & \multirow{2}{*}{$.2$}  & $1.5864	$ &$1.2193	$ &$1.5775	$ &$1.6908	$ &$1.6497	$  \\
+		                &                        & $38.70\%	$ &$35.17\%	$ &$51.71\%	$ &$53.30\%	$ &$52.54\%	$  \\ \cline{2-7}
+		                & \multirow{2}{*}{$.25$} & $2.3047	$ &$1.2972	$ &$1.6334	$ &$1.7067	$ &$1.6701	$  \\
+		                &                        & $47.31\%	$ &$39.96\%	$ &$56.44\%	$ &$56.81\%	$ &$55.97\%	$  \\ \cline{2-7}
+		                & \multirow{2}{*}{$.3$}  & $3.0681	$ &$1.3791	$ &$1.7013	$ &$1.7322	$ &$1.7025	$  \\
+		                &                        & $53.48\%	$ &$44.60\%	$ &$60.08\%	$ &$59.56\%	$ &$58.69\%	$  \\
+
+		            
+		        \end{tabular}
+		%     \end{adjustbox}
+		%     \vspace{ - 05 mm}
+		    \caption{xxx}
+		    \label{tab:xxx}
+		\end{table}
