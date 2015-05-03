@@ -20,10 +20,10 @@ class AdversarialCost(DefaultDataSpecsMixin, Cost):
 
     supervised = True
 
-    def __init__(self, eps):
-        self.eps = eps
+    def __init__(self, learning_eps):
+        self.learning_eps = learning_eps
         print "========>"
-        print self.eps
+        print self.learning_eps
 
     def expr(self, model, data, **kwargs):
         """Returns a theano expression for the cost function.
@@ -45,9 +45,9 @@ class AdversarialCost(DefaultDataSpecsMixin, Cost):
         space, sources = self.get_data_specs(model)
         space.validate(data)
         X,y = data
-        X = X + self.eps * T.sgn( T.grad(model.cost_from_X(data), X))
+        adv_X = X + self.learning_eps * T.sgn( T.grad(model.cost_from_X(data), X))
 
-        return model.cost_from_X( (X,y) )
+        return model.cost_from_X( (adv_X, y) )
 
     @wraps(Cost.is_stochastic)
     def is_stochastic(self):
@@ -110,13 +110,14 @@ class adversarial_input_modification(Preprocessor):
         eps = self.training_eps
         X_var = T.TensorType(broadcastable=[s == 1 for s in X.shape],dtype=X.dtype)()
         y_var = T.TensorType(broadcastable=[s == 1 for s in y.shape],dtype=y.dtype)()
+        eps_var = T.dscalar('eps')
         data = (X_var, y_var)
 
         # X = X + eps(sign(grad_x(J)))
-        f = function([X_var,y_var], X_var + eps * T.sgn( T.grad(model.cost_from_X(data), X_var) ))
+        f = function([X_var,y_var,eps_var], X_var + eps_var * T.sgn( T.grad(model.cost_from_X(data), X_var) ))
 
         # Apply the function
-        dataset.X = f( X, y )
+        dataset.X = f( X, y, eps )
 
 
 def make_adv_training_set(learning_eps, training_eps=0.07):
@@ -128,7 +129,7 @@ def make_adv_training_set(learning_eps, training_eps=0.07):
     y = pickle.load( open( os.path.join(train_data_path, "mnist_train_y.pkl" )))
     train = dense_design_matrix.DenseDesignMatrix(X=X, y=y, y_labels=10)
 
-    train.apply_preprocessor(preprocessor=adversarial_input_modification("mlp.pkl",learning_eps, training_eps), can_fit=True)
+    train.apply_preprocessor(preprocessor=adversarial_input_modification("mlp"+str(learning_eps)+".pkl",learning_eps, training_eps), can_fit=True)
     train.use_design_loc('mnist_train_adv.npy')
     train_pkl_path = 'mnist_train_adv.pkl'
     serial.save(train_pkl_path, train)

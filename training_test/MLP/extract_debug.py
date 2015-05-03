@@ -7,18 +7,18 @@ def match(string, mprint=True) :
 	return match
 
 def print_result(nlls, miss):
-	print "${0:.4f}\t$ &".format(    float(nlls[0]) 		 )
-	print "${0:.2f}\%\t$ &".format( (float(miss[0]) * 100)  )
-	print "${0:.4f}\t$ &".format(    float(nlls[1]) 		 )
-	print "${0:.2f}\%\t$ &".format( (float(miss[1]) * 100)  )
-	print "${0:.4f}\t$ &".format(    float(nlls[3]) 		 )
-	print "${0:.2f}\%\t$ &".format( (float(miss[3]) * 100)  )
-	print "${0:.4f}\t$ &".format(    float(nlls[5]) 		 )
-	print "${0:.2f}\%\t$ &".format( (float(miss[5]) * 100)  )
-	print "${0:.4f}\t$ &".format(    float(nlls[7]) 		 )
-	print "${0:.2f}\%\t$ &".format( (float(miss[7]) * 100)  )
-	print "${0:.4f}\t$ &".format(    float(nlls[9]) 		 )
-	print "${0:.2f}\%\t$ &".format( (float(miss[9]) * 100)  )
+	print "${0:.4f} \t$&".format(   float(nlls[0]) 		  )
+	print "${0:.2f}\%\t$&".format( (float(miss[0]) * 100) )
+	print "${0:.4f} \t$&".format(   float(nlls[1]) 		  )
+	print "${0:.2f}\%\t$&".format( (float(miss[1]) * 100) )
+	print "${0:.4f} \t$&".format(   float(nlls[3]) 		  )
+	print "${0:.2f}\%\t$&".format( (float(miss[3]) * 100) )
+	print "${0:.4f} \t$&".format(   float(nlls[5]) 		  )
+	print "${0:.2f}\%\t$&".format( (float(miss[5]) * 100) )
+	print "${0:.4f} \t$&".format(   float(nlls[7]) 		  )
+	print "${0:.2f}\%\t$&".format( (float(miss[7]) * 100) )
+	print "${0:.4f} \t$&".format(   float(nlls[9]) 		  )
+	print "${0:.2f}\%\t$&".format( (float(miss[9]) * 100) )
 
 def print_all(all_nlls, all_miss):
 
