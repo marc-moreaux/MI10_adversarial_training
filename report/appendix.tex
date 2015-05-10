@@ -1,0 +1,27 @@
+
+\begin{appendices}
+	\section{Two neurons neural network's cost}
+	\label{sec:2N_NN_cost}
+		Here we want to derive the cost $C$ of neural network\ref{fig:2N_NN} with respect to $x$. We first detail all the variables and then proceed to derivation.
+		\begin{itemize}
+			\item $C$ is the cost defined for sample $i$ as $C_i = y_i \ln(p_i) + (1-y_i)\ln(1-p_i)$, and the total cost $C$ is the mean of over the samples' costs.
+			\item $p_i$ is the prediction for sample $i$. It's defined by $p_i = \sigma(z)$
+			\item $\sigma(z)$ is the sigmoid function: $\sigma(z) = \frac{1}{1 + e^{-z}}$. It's derivative with respect to $z$ is $\sigma(z)(1-\sigma(z))$
+			\item $z$ is a term introduced to narrow the notation. $z=W^Tx+b$.
+			\item $W^T$ is the weight matrix such that $W^j$ is the weight vector for neuron $j$
+			\item $b$ is a bias term. It can be considered as a weight to a feature always equal to one.
+			\item $x_i$ is an input sample vector defined by its features.
+		\end{itemize}
+		Now, we use the chain rule to derive the Cost $C_i$ with respect to input $x$
+		\begin{equation}
+			\begin{split}
+				\frac{\delta C_i}{\delta x} &= \frac{\delta C_i}{\delta p_i} \frac{\delta p_i}{\delta x} \\
+				&= y_i \frac{1}{p_i} \frac{\delta p_i}{\delta x} + (1-y_i)\frac{1}{1-p_i} \frac{\delta (1-p_i)}{\delta x} \\
+				&= \frac{y_i}{p_i} p_i(1-p_i)\frac{\delta z}{\delta x} + \frac{1-y_i}{1-p_i} -(p_i)(1-p_i) \frac{\delta z}{\delta x} \\
+				&= \left( y_i (1-p_i) + (1-y_i) (-p_i)   \right) \frac{\delta z}{\delta x} \\
+				&= W \left( y_i (1-p_i) + (1-y_i) (0-p_i)  \right)  \\
+				&= W \left( y_i -p_i                       \right)
+			\end{split}
+		\end{equation}
+\end{appendices}
+		

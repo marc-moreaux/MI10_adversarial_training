@@ -17,15 +17,16 @@
 
 
 	\subsection{Artificial neuron and Perceptron}
-		Perceptrons, introduced by Rosenblatt in 1958 \cite{rosenblatt1958perceptron}, was the first artificial neuron introduced in the literature. \Fref{fig:perceptron} is a model of an artificial neuron. On this model, the $x_{ij}$s represent binary inputs of the perceptron and the perceptron, represented with a circle on the figure, is defined by a threshold activation function such that :
+	\label{sec:Artificial_neurons}
+		Perceptrons, described by Rosenblatt in 1958 \cite{rosenblatt1958perceptron}, was the first artificial neuron introduced in the literature. \Fref{fig:perceptron} is a model of an artificial neuron. On this model, the $x_{ij}$s represent binary inputs of the perceptron and the perceptron, represented with a circle on the figure, is defined by a threshold activation function such that :
 
-		$$ f(x_i) = \begin{cases}1 & \text{if } \sum_j \beta_j \cdot x_{ij} + b > 0\\0 & \text{otherwise}\end{cases}  $$ 
+		$$ f(x_i) = \begin{cases}1 & \text{if } \sum_j w_j \cdot x_{ij} + b > 0\\0 & \text{otherwise}\end{cases}  $$ 
 
-		Where $\beta_j$ is a weight assigned to the $x_{ij}$ input and $b$ is a bias terms that does not depend on any input value.
+		Where $w_j$ is a weight assigned to the $x_{ij}$ input and $b$ is a bias terms that does not depend on any input value.
 
-		We often consider a vector representation of the inputs such that $x_i$ is the vector composed by all the $x_{ij}$ and $\beta$ the vector composed by the $\beta_j$. In this case, we rewrite : 
+		We often consider a vector representation of the inputs such that $x_i$ is the vector composed by all the $x_{ij}$ and $w$ the vector composed by the $w_j$. In this case, we rewrite : 
 
-		$$ f(x_i) = \begin{cases}1 & \text{if } \beta \cdot x_i + b > 0\\0 & \text{otherwise}\end{cases}  $$ 
+		$$ f(x_i) = \begin{cases}1 & \text{if } w \cdot x_i + b > 0\\0 & \text{otherwise}\end{cases}  $$
 
 		\begin{figure}
 			\centering
@@ -53,12 +54,14 @@
 			\caption{Model of an artificial neuron}
 		\end{figure}
 
-		The modern artificial neurons, like the sigmoid neuron, have the same representation as the model visible on \fref{fig:perceptron}. The differences comes from the inputs $x_i$ which are now real valued and the activation function that outputs a real value too. For instance, the sigmoid activation function is defined as : 
 
-		$$ f(x_i) = \frac{1}{1+e^{-(\beta \cdot x_i + b)}} = \sigma(\beta \cdot x_i + b)  $$
-
-		Where $\sigma(x_i)$ is the sigmoid function : $\sigma(x) = \frac{1}{1+e^{-x_i}}$
-
+		Nowadays we use other types of neurons. As the perceptron, they are a function of $x_i$, the previous inputs. Now, their activation function is different and their outputs are real valued. We present two of the well known neurons :
+		\begin{itemize}
+			\item The sigmoid neuron is defined with a smooth threshold function :
+			$$ \sigma(x) = \frac{1}{1 + e^{-x}} $$
+			\item The Regression Logistic Unit (ReLU) is a neuron which activation function is equal to zero for any negative inputs and equal to its input otherwise.
+			$$ h(x) = \begin{cases} ?? & \text{if } w \cdot x_i + b > 0 \\0 & \text{otherwise}\end{cases} $$
+		\end{itemize}
 
 
 	\subsection{Neural network}
@@ -126,25 +129,28 @@
 	
 
 	\subsection{Cost function}
-		Once we have build our model, we consider a cost function, also called "loss function". This cost function define how good is the model considering an evaluation criterion. In the case of classification, we want to evaluate how good the prediction is doing towards the true output. Consider the model presented on \fref{fig:feed_forward} and a sample $i$ with inputs $x_i$ and true prediction $y_i = [1,0]$. If our model predicts $p_i = [0.9,0,1]$ then, we want the cost function to reflect the $[0.1,0.1]$ difference in between $y_i$ and $p_i$.
-
+		Once we have build our model, we consider a cost function, also called "loss function". This cost function define how good is the model considering an evaluation criterion. In the case of classification, we want to evaluate how good the prediction is doing towards the true output.
 		The most famous cost functions in neural network classification are the squared error and the cross entropy (also called the "negative log-likelihood"). They are defined as follows for a given sample $i$ and output $j$.
 		\begin{itemize}
-			\item Squared error : $$ l(p_{ij},y_{ij}) = \left[ y_{ij} - p_{ij} \right]^2 $$
-			\item Cross entropy : $$ l(p_{ij},y_{ij}) = -\ln(p_{ij})_{y_{ij}}  $$
+			\item Squared error : $$ l(p_{ij},y_{ij}) = \norm{y_{ij} - p_{ij}}_2^2 $$
+			\item Cross entropy : $$ l(p_{ij},y_{ij}) = -\ln(p_{ij})_{y_{ij}}  ??? $$ 
 		\end{itemize}
-		In the most common cases, the classes where $y_i$ belongs is binary. Therefore $y_{ij}$ is either $0$ or $1$. In that case the cross entropy function is written : 
-		$$ l(p_{ij},y_{ij}) = - y_{ij}\ln(p_{ij}) - (1-y_{ij})\ln(1-p_{ij})  $$
 
+		Lets take an example. Consider the model presented on \fref{fig:feed_forward}. To this model, we input $x_i$ and propagate the signal until the last layer. This last layer gives us the prediction $p_i = [0.9,0.15]$. Given with $x_i$ we had its true prediction $y_i = [1,0]$. We have everything to compute the two loss functions described earlier : 
+		\begin{itemize}
+			\item Squared error : $$ l(p_{ij},y_{ij}) =  .1^2 + .15^2 $$
+			\item Cross entropy : $$ l(p_{ij},y_{ij}) = -\ln(.1)  $$
+		\end{itemize}
+
+
+	\subsection{Back-propagation}
+		Back propagation is the 
+
+
+		\vspace{1em}
+		\textbf{Notation : }\\
 
 
 	\subsection{Gradient descent}
 
 		
-
-
-	\subsection{Back-propagation}
-
-
-
-
