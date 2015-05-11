@@ -7,20 +7,25 @@
 
 	\subsection{Motivation}
 		At the very beginning of this thesis, there is me, the writer. I wanted, from the very first day, to work on neural-networks and more specifically on deep-learning. I wanted so, because deep-learning has become in the last decade the most efficient algorithm at classifying images. 
-		I was then searching for a topic and discovered the work made by Ian J. Goodfellow, Jonathon Shlens and Christian Szegedy. In their publication named "Explaining and Harnessing Adversarial Examples"\cite{goodfellow2014explaining} they motivate that adversarial learning could improve the accuracy of some given neural-networks. Most of their test are based on the MNIST dataset\cite{lecun-mnist}. After contacting one of the authors of this publication, it appeared that it would be a good contribution to validate their observations on other datasets. For this reason, the following thesis is about validating the proposed adversarial learning described in \cite{goodfellow2014explaining} with different datasets.
+		I was then searching for a topic. I discovered the work made by Ian J. Goodfellow, Jonathon Shlens and Christian Szegedy. In their publication named "Explaining and Harnessing Adversarial Examples"\cite{goodfellow2014explaining} they motivate that adversarial learning could improve the accuracy of some given neural-networks. After contacting one of the authors of this publication, it appeared that it would be a good contribution to validate their observations on other datasets, since most of their test are based on the MNIST dataset\cite{lecun-mnist}. Therefore, the following thesis is about further validating the proposed adversarial-learning method described in \cite{goodfellow2014explaining} with different datasets.
 
 	\subsection{Methodology}
-		On the one hand , we want to validate that adversarial learning is performing better at classifying than regular learning. On the other hand, we  want to understand the reasons underlining this performances. To do so, we will first re-implement the proposed solution of \cite{goodfellow2014explaining} in such way that we isolate adversarial learning from other techniques used in the paper. Once this is done, we will move to other datasets. These datasets are composed 
+		We are therefore going to investigate on how is adversarial-learning performing with shallow-neural-networks on different datasets. On the same time, we are going to investigate on the reasons underlining this performances. To do so, we will first re-implement the proposed solution of \cite{goodfellow2014explaining} in such a way that we isolate adversarial-learning from other techniques used in the paper. At this point we will emphasize the benefits of adversarial-learning. 
 
-		step we will take is to re-implement adversarial learning on the MNIST dataset. This operation will 
-		Once we have implemented the neural networks and trained the dataset with this adversarial learning technique, we expect to have a model more accurate in predicting the classes. 
-		It seems legitimate at this point to believe that adversarial learning will improve the accuracy of predicting images' classes. The paper presented above\cite{goodfellow2014explaining} was classifying a dataset composed by images: the MNIST dataset. What we are going to do in this paper is to first validate this hypothesis with another image dataset: the CIFAR10 dataset\cite{krizhevsky2009learning} and the STL-10 dataset\cite{maybe...}. Once the hypothesis is more accepted, we would like to try this technique on a dataset of other nature. The one we would try is a phoneme dataset: the TIMIT dataset\cite{maybe...}. Having better results with these datasets would further validate this technique as useful for classification in the context of shallow neural network.
+		We will then move to another dataset similar to the first one, there will also be 10 different classes of images to classify. That dataset will be the CIFAR10\cite{CIFAR10_BITCHES}. Again, some knowledge will be acquired from this experience. Finally, we will test the adversarial-learning on a dataset of other nature. The one we would try is a phoneme dataset: the TIMIT dataset\cite{maybe...}. The results obtained from this dataset will further validate the technique as useful for classification in the context of shallow-neural-network.
 
 	\subsection{Expected outcome}
-	
-	In their paper, Ian J. Goodfellow, Jonathon Shlens and Christian Szegedy, described their technique to able to ??? 
-	=> How adversarial learning best separate the classes.
+		In their paper, Ian J. Goodfellow, Jonathon Shlens and Christian Szegedy, described their technique to able to ??? 
+		=> How adversarial learning best separate the classes.
+		With this adversarial-learning technique we expect to have a network able to emphasize the differences the classes. We expect the network to learn the differences between classes more than just the pattern of a class.
 
+
+	\subsection{Adversarial-learning}
+		Until now, we've been teasing adversarial-learning without explaining what it is about. Lets start off with mentioning what an adversarial sample to a classifier would be. Imagine you have full knowledge of a given classifier. Starting from there, you can create samples to this classifier that are going to give some predictions. Knowing how does the classifier behaves, you can creates samples leading your classifier to some mistakes. This are adversarial samples. In machine learning, adversarial-learning is about creating a classifier resisting to adversarial samples.
+
+		In the publication that interest us\cite{goodfellow2014explaining}, the authors noticed that twisting each pixels of the input images by some very specific values (the adversarial values), an accurate classifier could be easily fooled. Lets detail : Consider you have a classifier able to recognize the MNIST dataset and this classifier makes 10 errors when guessing the classes of 200 samples. Now, if you modify each pixels of these 200 samples by a little value, the classifier makes 180 errors. You've fooled your classifier. 
+
+		The adversarial-learning algorithm we use, is going to embed some properties letting the classifier resist to some adversarial samples. More specifically, we are going to train our classifier on adversarial samples that could have been used to fool our classifier.
 
 
 
