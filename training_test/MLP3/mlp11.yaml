@@ -1,0 +1,74 @@
+!obj:pylearn2.train.Train {
+    dataset: &train !obj:pylearn2.datasets.dense_design_matrix.DenseDesignMatrix {
+        X: !pkl: '/media/marc/SAMSUNG_SD_/data/cifar10/train_X.pkl',
+        y: !pkl: '/media/marc/SAMSUNG_SD_/data/cifar10/train_y.pkl',
+        y_labels: 10,
+    },
+    model: !obj:pylearn2.models.mlp.MLP {
+        layers: [ !obj:pylearn2.models.mlp.RectifiedLinear {
+                     layer_name: 'h0',
+                     dim: 1200,
+                     sparse_init: 15
+                 }, !obj:pylearn2.models.mlp.Softmax {
+                     layer_name: 'y',
+                     n_classes: 10,
+                     irange: 0.
+                 }
+                ],
+        nvis: 3072,
+    },
+    algorithm: !obj:pylearn2.training_algorithms.sgd.SGD {
+        batch_size: 200,
+        learning_rate: .0001,
+        learning_rule: !obj:pylearn2.training_algorithms.learning_rule.Momentum {
+            init_momentum: .5,
+            nesterov_momentum: True
+        },
+        monitoring_dataset: {
+            'train' : *train,
+            'valid' : !obj:pylearn2.datasets.dense_design_matrix.DenseDesignMatrix {
+                X: !pkl: '/media/marc/SAMSUNG_SD_/data/cifar10/valid_X.pkl',
+                y: !pkl: '/media/marc/SAMSUNG_SD_/data/cifar10/valid_y.pkl',
+                y_labels: 10,
+            },
+            'test' : !obj:pylearn2.datasets.cifar10.CIFAR10 {
+                which_set: test
+            },
+        },
+        termination_criterion: !obj:pylearn2.termination_criteria.And {
+            criteria: [
+                !obj:pylearn2.termination_criteria.MonitorBased {
+                    channel_name: "valid_y_misclass",
+                    prop_decrease: 0.,
+                    N: 100
+                },
+                !obj:pylearn2.termination_criteria.EpochCounter {
+                    max_epochs: 1500
+                }
+            ]
+        },
+        cost: !obj:costAdv.AdversarialCost {
+            learning_eps: %(learning_eps)f
+        }
+    },
+    extensions: [
+           !obj:pylearn2.train_extensions.best_params.MonitorBasedSaveBest {
+             channel_name: 'valid_y_misclass',
+             save_path: "%(save_path)s/mem/mlp_11_%(learning_eps)s.pkl",
+        },
+        !obj:pylearn2.training_algorithms.learning_rule.MomentumAdjustor {
+            start: 1,
+            saturate: 20,
+            final_momentum: .99
+        }
+    ]
+    # save_path: "%(save_path)s/mlp%(learning_eps)s.pkl",
+    # save_freq : 20
+}
+
+# python -c "from pylearn2.utils import serial; \
+#            train_obj = serial.load_train_file('mlp.yaml'); \
+#            train_obj.main_loop()"
+
+
+

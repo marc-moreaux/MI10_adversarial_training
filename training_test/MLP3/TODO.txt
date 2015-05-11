@@ -1,0 +1,10 @@
+
+=> Change dataset
+=> try other noise (random noise, distortion)
+=> Try other normalisations (L1, L2, early stopping)
+=> Back propagate signal (force out to be 1 and make a new input) [NO]
+
+
+
+===> Make report :(
+=> Noise reduction
