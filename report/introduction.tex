@@ -23,10 +23,9 @@
 	\subsection{Adversarial-learning}
 		Until now, we've been teasing adversarial-learning without explaining what it is about. Lets start off with mentioning what an adversarial sample to a classifier would be. Imagine you have full knowledge of a given classifier. Starting from there, you can create samples to this classifier that are going to give some predictions. Knowing how does the classifier behaves, you can creates samples leading your classifier to some mistakes. This are adversarial samples. In machine learning, adversarial-learning is about creating a classifier resisting to adversarial samples.
 
-		In the publication that interest us\cite{goodfellow2014explaining}, the authors noticed that twisting each pixels of the input images by some very specific values (the adversarial values), an accurate classifier could be easily fooled. Lets detail : Consider you have a classifier able to recognize the MNIST dataset and this classifier makes 10 errors when guessing the classes of 200 samples. Now, if you modify each pixels of these 200 samples by a little value, the classifier makes 180 errors. You've fooled your classifier. 
+		In the publication that interest us\cite{goodfellow2014explaining}, the authors noticed that twisting each pixels of the input images by some very specific values (the adversarial values), an accurate classifier could be easily fooled. Lets detail : Consider you have a classifier able to recognize the MNIST dataset and this classifier makes 10 errors when guessing the classes of 200 samples. Now, if you modify each pixels of these 200 samples by a little value, the classifier makes 180 errors. You've fooled your classifier with adversarial samples.
 
-		The adversarial-learning algorithm we use, is going to embed some properties letting the classifier resist to some adversarial samples. More specifically, we are going to train our classifier on adversarial samples that could have been used to fool our classifier.
-
+		The adversarial-learning algorithm we use is going to learn from adversarial samples. Therefore, at any time the algorithm want to predict the class of a sample, he will predict the class of the adversarial sample. It's with this approach that we aim at diminishing the error rate of the classifier.
 
 
 	\subsection{Setting-up an example}
