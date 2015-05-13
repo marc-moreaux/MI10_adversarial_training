@@ -6,36 +6,20 @@
 
 	Artificial neural-networks are a family of statistical learning algorithms. They are inspired from the human brain structure : nowadays, we believe the brain has a network of neurons triggering signals over its dendrite and propagated to other neurons through a synapse interface. Network of artificial neurons mimics these properties.
 
-
-	In this section, we will first introduce what are the artificial neurons and how do we agregate them to make neural-networks. After we've seen this, we will see how to train these networks: what is a cost and how do we reduce the error made by these networks.
-
-	% \vspace{1em}
-	% \textbf{Notation : }\\
-	% We are going to introduce here some notation about the datasets.
-	% \begin{itemize}
-	% 	\item As mentioned just above, we have an input dataset X. X is a matrix where each rows represent a sample and each columns represent a feature. There is $n$ samples and $m_1$ features. $x_i$ is one of the samples. It is therefore a vector of size $m_1$. $x_{ij}$ is the value of feature $j$ of sample $i$.
-	% 	\item Y is a also a matrix. Each row represent a samples and each colums represent a class. There is $m_2$ classes. Here $y_i$ is a vector of size $m_2$ representing the class $x_i$ belongs in and $y_{ij}$ is a binary value stating if sample $i$ is from the class $j$.
-	% 	\item With neural-networks, we will compute predictions. The prediction we compute for sample $i$ is $p_i$. It's a vector with the same shape as $y_i$. Each values $p_{ij}$ is a prediction made by the network on sample $i$ belonging to class $j$.
-	% \end{itemize}
+	In this section, we will first introduce what are the artificial neurons and how do we aggregate them to make neural-networks. After we've seen this, we will see how to train these networks: what is a cost and how do we reduce the error made by these networks.
 
 
 	\subsection{Artificial neuron and Perceptron}
 	\label{sec:Artificial_neurons}
-		First, the neurons. The first neuron we mention here is the perceptrons. It was described by Rosenblatt in 1958 \cite{rosenblatt1958perceptron} and was one of the first artificial neuron introduced in the literature. This neuron takes as an input multiple binary values to which it apply weights. Once multiplied, these \textit{weighted inputs} are summed-up. If the sum is lower than zero, the neuron outputs zero. Otherwise, the neuron outputs one. 
+		First, the neurons. The first neuron we mention here is the \textbf{Perceptron}. It was described by Rosenblatt in 1958 \cite{rosenblatt1958perceptron} and was one of the first artificial neuron introduced in the literature. This neuron takes as an input multiple binary values to which it apply weights. Once multiplied, these \textit{weighted inputs} are summed-up. If the sum is lower than zero, the neuron outputs zero. Otherwise, the neuron outputs one. A schema of an artificial neuron is given on \Fref{fig:perceptron}.
 
-		Formally: given an input vector $x$ of size $m$ where $x_i$ is the $i$th element of $x$, the Perceptron defines a weight vector $w$ with same shape as the input vector $x$. Then the transfer function is :
+		Formally: given an input vector $x$ of size $m$ where $x_i$ is the $i$th element of $x$, the Perceptron defines a weight vector $w$ with same shape as the input vector $x$ and a bias term $b$. Then its transfer function is :
 
-		$$ \text{Perceptron}(x) = \begin{cases}1 & \text{if } \sum_j w_j \cdot x_j > 0\\0 & \text{otherwise}\end{cases} $$
+		$$ \text{Perceptron}(x) = \begin{cases}1 & \text{if } \sum_{j=0}^m (w_j \times x_j) + b > 0\\0 & \text{otherwise}\end{cases} $$
 
-		 \Fref{fig:perceptron} is a model of an artificial neuron. On this model, the $x_{ij}$s represent binary inputs of the Perceptron and the Perceptron, represented with a circle on the figure, is defined by a threshold activation function such that :
+		In a vector notation this becomes 
 
-		$$ f(x_i) =   $$ 
-
-		Where $w_j$ is a weight assigned to the $x_{ij}$ input and $b$ is a bias terms that does not depend on any input value.
-
-		We often consider a vector representation of the inputs such that $x_i$ is the vector composed by all the $x_{ij}$ and $w$ the vector composed by the $w_j$. In this case, we rewrite : 
-
-		$$ f(x_i) = \begin{cases}1 & \text{if } w \cdot x_i + b > 0\\0 & \text{otherwise}\end{cases}  $$
+		$$ \text{Perceptron}(x) = \begin{cases}1 & \text{if } w^T \cdot x +b > 0\\0 & \text{otherwise}\end{cases} $$
 
 		\begin{figure}
 			\centering
@@ -46,38 +30,37 @@
 			    \tikzstyle{output neuron}=[neuron, fill=red!50];
 
 			    % Input neurons
-			    \node[tata] (x1) at (\layersep,-1 cm) {$x_{i1}$};
-			    \node[tata] (x2) at (\layersep,-2 cm) {$x_{i2}$};
-			    \node[tata] (x3) at (\layersep,-3 cm) {$x_{i3}$};
+			    \node[tata] (x1) at (0,-1 cm) {$x_1$};
+			    \node[tata] (x2) at (0,-2 cm) {$x_2$};
+			    \node[tata] (x3) at (0,-3 cm) {...};
+			    \node[tata] (x4) at (0,-4 cm) {$x_m$};
 			    
 			    % Draw the output layer node
-			    \node[neuron,pin={[pin edge={->}]right:Output}, right of=x2] (O) {};
+			    \node[neuron,pin={[pin edge={->}]right:Output}] (O) at (\layersep,-2.5) {};
 
 			    % Connect every node in the hidden layer with the output layer
 			    \path (x1) edge (O);
 			    \path (x2) edge (O);
-			    \path (x3) edge (O);
+			    \path (x4) edge (O);
 
 			\end{tikzpicture}
 			\label{fig:perceptron}
 			\caption{Model of an artificial neuron}
 		\end{figure}
 
-
-		Nowadays we use other types of neurons. As the perceptron, they are a function of $x_i$, the previous inputs. Now, their activation function is different and their outputs are real valued. We present two of the well known neurons :
+		Nowadays we use other types of neurons. As the Perceptron, these neurons consider a weighted sum of their inputs plus a bias term. Now, their activation function is different and their outputs are real valued. We present two of the well known neurons:
 		\begin{itemize}
-			\item The sigmoid neuron is defined with a smooth threshold function :
+			\item The \textbf{sigmoid neuron} is defined by a smooth threshold function :
 			$$ \sigma(x) = \frac{1}{1 + e^{-x}} $$
-			\item The Regression Logistic Unit (ReLU) is a neuron which activation function is equal to zero for any negative inputs and equal to its input otherwise.
-			$$ h(x) = \begin{cases} ?? & \text{if } w \cdot x_i + b > 0 \\0 & \text{otherwise}\end{cases} $$
+			\item The \textbf{Regression Logistic Unit} (ReLU) is a neuron which activation function is equal to zero for any negative inputs and equal to its input otherwise.
+			$$ \text{ReLU}(x) = \begin{cases} ?? & \text{if } w \cdot x + b > 0 \\0 & \text{otherwise}\end{cases} $$
 		\end{itemize}
 
 
 	\subsection{Neural-network}
-		Now that we have neurons, we need a network of them to compose an architecture similar to the brain one. The networks we are going to work with are feed-forward neural-networks. They are the most common ones in the literature. \Fref{fig:feed_forward} is a representation of a two-hidden-layer feed-forward neural-network. As you can see, that model consist of groups of neurons. We denote as layer the group of neurons belonging to the same deepness in the model. Therefore, all the neurons visible on the left in our model, compose the first layer of neurons. It's the input layer. The following layers are called the hidden layers and the last one is the output layer. Some variations exists of this definition, for instance, some outputs of the model might be placed at the level of a hidden layer.
+		Now that we have neurons, we need a network of them to compose an architecture similar to the brain. The networks we are going to work with are called \textbf{feed-forward} neural-networks. They are the most common ones in the literature. \Fref{fig:feed_forward} is a representation of a two-hidden-layer feed-forward neural-network. As you can see, this model consist of groups of neurons. We denote as layer the group of neurons belonging to the same deepness in the model. Therefore, all the neurons visible on the left in our model, compose the first layer of neurons. It's the input layer. The following layers are called the hidden layers and the last one is the output layer. Some variations exists of this definition, for instance, some outputs of the model might be placed at the same level as some hidden layer.
 
-		Consider our feed-forward model on \fref{fig:feed_forward}. If you feed this model with an input vector $x_i$ (composed by 4 features) then, going through the weights and neurons, the model will output a prediction $p_i$. This $p_i$ correspond to which classes the model believes $x_i$ belongs.
-		
+		Our simple example is also a feed-forward neural-network. It has an input layer fully connected to a hidden layer, which is also fully connected to the output layer. As drawn on the schema with the directions of the arrows, the signal propagates from left to right, from the inputs to the outputs. Because of these two reasons (layers fully connected and single direction signal propagation) our simple example is a feed-forward neural-network.		
 
 		\begin{figure}
 			\centering
@@ -130,10 +113,13 @@
 		\end{figure}
 
 
-		It's good to mention that other types of network exits such as the recurrent networks. In these networks, there is directed cycles on the graph which means that a neuron can depends on its own output. This model seems mode accurate in the relation with the human brain but we won't work on these models.
+		It's good to mention that other types of network exits such as the \textbf{recurrent networks}. In these networks, there is directed cycles on the graph which means that a neuron can depends on its own output. This model is considered to be closer to the brain structure but the challenge on training these models isn't state of the art. We won't work on these models.
 
-		Symmetrically connected networks is an other types of network, they are called the "Boltzmann machines". They are symmetrical in the sense that connections between neurons exists in the two directions and the weight on this connections is the same in both directions. Here again, we won't work on these models.
+		\textbf{Symmetrically connected} networks is an other types of network, they are called the "Boltzmann machines". They are symmetrical in the sense that connections between neurons exists in the two directions and the weight on this connections is the same in both directions. Here again, we won't work on these models.
 
+
+	\subsection{Forward propagation}
+		
 
 	
 
@@ -169,7 +155,7 @@
 		A ReLU is similar to a perceptron but it has a different transfert function. As the perceptron, it has many inputs an one output. The output is a function of the sum of the weighted inputs. This function is defined as :
 		$$ h_t(x) =  $$
 		All together, the ReLU outputs :
-		$$ \text{ReLU}(X) =  (WˆTx_i) $$
+		$$ \text{ReLU}(X) =  (W^Tx_i) $$
 
 		\subsection{Defining the multi-layer net}
 		The Multi-layer neural-network we first study has two layers of composed by 500 ReLU neuron each and an output layer of softmax units. 
