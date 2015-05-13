@@ -1,26 +1,35 @@
 
-\section{Neural Networks}
+\section{Neural-Networks}
 \label{sec:neural_networks}
-	
-	In this section we will see how neural network manage to solve classification tasks. As a reminder, a classification problem aims at identifying the sub-populations of a set belonging to a class. More specifically : we are given a set of inputs $X$ and outputs $Y$ composed by $n$ samples. We denote $x_i$ a sample of the set $X$. This sample $x_i$ is belongs to the class $y_i$. The aim of classification is, given a new sample $x_i$ to find the best matching class $y_i$ it belongs in.
 
-	The algorithms we use in this report are the artificial neural networks. they are a family of statistical learning algorithms. They are inspired from the human brain structure : nowadays, we believe the brain has a network of neurons triggering signals over its dendrite and propagated to other neurons through a synapse interface. Network of artificial neurons mimics these properties.
+	In this section we will see how neural-network manage to solve classification tasks. As a reminder, a classification problem aims at identifying the sub-populations of a set belonging to a class. More specifically : if we are given a set of inputs $X$ and outputs $Y$. where $x^i$ denotes a sample from the set $X$ and $y^i$ its class. Then, the aim of classification is to predict the class a new sample given the knowledge based on the $x^i$'s.
 
-	\vspace{1em}
-	\textbf{Notation : }\\
-	We mentioned that the input set $X$ and output set $Y$ were composed by $n$ samples where $x_i$ and $y_i$ denoted the specific input and true class output of the sample $i$. 
-	\begin{itemize}
-		\item $x_i$, the input vector of sample $i$, is a vector of size $m_1$, which means that the input $x_i$ is represented by $m_1$ different features, we note $x_{ij}$ the value of feature $j$ of sample $i$.
-		\item $y_i$, the true class output of sample $i$, is a vector of size $m_2$, which means that the samples in $X$ can belong in $m_2$ different classes. We denote $y_{ij}$ the value of the output for the class $j$ of sample $i$.
-		\item $p_i$, the prediction output of sample $i$, is a vector of size $m_2$. It represents the prediction made by the model as it was feed with $x_i$. It tries to predict $y_i$. We denote $p_{ij}$ the value of the prediction for class $j$ of sample $i$.
-	\end{itemize} 
+	Artificial neural-networks are a family of statistical learning algorithms. They are inspired from the human brain structure : nowadays, we believe the brain has a network of neurons triggering signals over its dendrite and propagated to other neurons through a synapse interface. Network of artificial neurons mimics these properties.
+
+
+	In this section, we will first introduce what are the artificial neurons and how do we agregate them to make neural-networks. After we've seen this, we will see how to train these networks: what is a cost and how do we reduce the error made by these networks.
+
+	% \vspace{1em}
+	% \textbf{Notation : }\\
+	% We are going to introduce here some notation about the datasets.
+	% \begin{itemize}
+	% 	\item As mentioned just above, we have an input dataset X. X is a matrix where each rows represent a sample and each columns represent a feature. There is $n$ samples and $m_1$ features. $x_i$ is one of the samples. It is therefore a vector of size $m_1$. $x_{ij}$ is the value of feature $j$ of sample $i$.
+	% 	\item Y is a also a matrix. Each row represent a samples and each colums represent a class. There is $m_2$ classes. Here $y_i$ is a vector of size $m_2$ representing the class $x_i$ belongs in and $y_{ij}$ is a binary value stating if sample $i$ is from the class $j$.
+	% 	\item With neural-networks, we will compute predictions. The prediction we compute for sample $i$ is $p_i$. It's a vector with the same shape as $y_i$. Each values $p_{ij}$ is a prediction made by the network on sample $i$ belonging to class $j$.
+	% \end{itemize}
 
 
 	\subsection{Artificial neuron and Perceptron}
 	\label{sec:Artificial_neurons}
-		Perceptrons, described by Rosenblatt in 1958 \cite{rosenblatt1958perceptron}, was the first artificial neuron introduced in the literature. \Fref{fig:perceptron} is a model of an artificial neuron. On this model, the $x_{ij}$s represent binary inputs of the perceptron and the perceptron, represented with a circle on the figure, is defined by a threshold activation function such that :
+		First, the neurons. The first neuron we mention here is the perceptrons. It was described by Rosenblatt in 1958 \cite{rosenblatt1958perceptron} and was one of the first artificial neuron introduced in the literature. This neuron takes as an input multiple binary values to which it apply weights. Once multiplied, these \textit{weighted inputs} are summed-up. If the sum is lower than zero, the neuron outputs zero. Otherwise, the neuron outputs one. 
 
-		$$ f(x_i) = \begin{cases}1 & \text{if } \sum_j w_j \cdot x_{ij} + b > 0\\0 & \text{otherwise}\end{cases}  $$ 
+		Formally: given an input vector $x$ of size $m$ where $x_i$ is the $i$th element of $x$, the Perceptron defines a weight vector $w$ with same shape as the input vector $x$. Then the transfer function is :
+
+		$$ \text{Perceptron}(x) = \begin{cases}1 & \text{if } \sum_j w_j \cdot x_j > 0\\0 & \text{otherwise}\end{cases} $$
+
+		 \Fref{fig:perceptron} is a model of an artificial neuron. On this model, the $x_{ij}$s represent binary inputs of the Perceptron and the Perceptron, represented with a circle on the figure, is defined by a threshold activation function such that :
+
+		$$ f(x_i) =   $$ 
 
 		Where $w_j$ is a weight assigned to the $x_{ij}$ input and $b$ is a bias terms that does not depend on any input value.
 
@@ -64,8 +73,8 @@
 		\end{itemize}
 
 
-	\subsection{Neural network}
-		Now that we have neurons, we need a network of them to compose an architecture similar to the brain one. The networks we are going to work with are feed-forward neural networks. They are the most common ones in the literature. \Fref{fig:feed_forward} is a representation of a two-hidden-layer feed-forward neural network. As you can see, that model consist of groups of neurons. We denote as layer the group of neurons belonging to the same deepness in the model. Therefore, all the neurons visible on the left in our model, compose the first layer of neurons. It's the input layer. The following layers are called the hidden layers and the last one is the output layer. Some variations exists of this definition, for instance, some outputs of the model might be placed at the level of a hidden layer.
+	\subsection{Neural-network}
+		Now that we have neurons, we need a network of them to compose an architecture similar to the brain one. The networks we are going to work with are feed-forward neural-networks. They are the most common ones in the literature. \Fref{fig:feed_forward} is a representation of a two-hidden-layer feed-forward neural-network. As you can see, that model consist of groups of neurons. We denote as layer the group of neurons belonging to the same deepness in the model. Therefore, all the neurons visible on the left in our model, compose the first layer of neurons. It's the input layer. The following layers are called the hidden layers and the last one is the output layer. Some variations exists of this definition, for instance, some outputs of the model might be placed at the level of a hidden layer.
 
 		Consider our feed-forward model on \fref{fig:feed_forward}. If you feed this model with an input vector $x_i$ (composed by 4 features) then, going through the weights and neurons, the model will output a prediction $p_i$. This $p_i$ correspond to which classes the model believes $x_i$ belongs.
 		
@@ -117,7 +126,7 @@
 			    \node[annot,right of=hl] {Output layer};
 			\end{tikzpicture}
 			\label{fig:feed_forward}
-			\caption{Feed-forward neural network with two hidden layers}
+			\caption{Feed-forward neural-network with two hidden layers}
 		\end{figure}
 
 
@@ -130,7 +139,7 @@
 
 	\subsection{Cost function}
 		Once we have build our model, we consider a cost function, also called "loss function". This cost function define how good is the model considering an evaluation criterion. In the case of classification, we want to evaluate how good the prediction is doing towards the true output.
-		The most famous cost functions in neural network classification are the squared error and the cross entropy (also called the "negative log-likelihood"). They are defined as follows for a given sample $i$ and output $j$.
+		The most famous cost functions in neural-network classification are the squared error and the cross entropy (also called the "negative log-likelihood"). They are defined as follows for a given sample $i$ and output $j$.
 		\begin{itemize}
 			\item Squared error : $$ l(p_{ij},y_{ij}) = \norm{y_{ij} - p_{ij}}_2^2 $$
 			\item Cross entropy : $$ l(p_{ij},y_{ij}) = -\ln(p_{ij})_{y_{ij}}  ??? $$ 
@@ -153,4 +162,14 @@
 
 	\subsection{Gradient descent}
 
-		
+	\section{Multi-layer neural-network}
+		The softmax network we've been previoulsy working with is a single-layer  neural-network, composed by softmax units (or softmax neurons). We are now going to work on a network containing more layers. Instead of forwarding our input data $X$ into the softmax units, we will input them into Rectified Linear Units (ReLU).
+
+		\subsection{Rectifiect Linear Units}
+		A ReLU is similar to a perceptron but it has a different transfert function. As the perceptron, it has many inputs an one output. The output is a function of the sum of the weighted inputs. This function is defined as :
+		$$ h_t(x) =  $$
+		All together, the ReLU outputs :
+		$$ \text{ReLU}(X) =  (WˆTx_i) $$
+
+		\subsection{Defining the multi-layer net}
+		The Multi-layer neural-network we first study has two layers of composed by 500 ReLU neuron each and an output layer of softmax units. 
