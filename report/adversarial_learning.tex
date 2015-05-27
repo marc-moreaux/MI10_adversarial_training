@@ -1,0 +1,96 @@
+
+
+
+\section{Adversarial learning}
+\label{sec:adversarial_learning}
+
+	This section is the main contribution of the thesis. We'll see how how an idea of adversarial learning can be applied on a deep-neural-network. This Idea was first developed by Ian J. Goodfellow, Jonathon Shlens and Christian Szegedy. They proposed an adversarial training on a shallow-feed-forward-neural-network. Along the paper\cite{goodfellow2014explaining}, they emphasize the be benefits of this method applied to a training on the MNIST dataset\cite{lecun-mnist}. Thanks to their adversarial learning, they obtained a better accuracy on the test set.
+
+	In this thesis we will isolate the adversarial-training from any other techniques used in \cite{goodfellow2014explaining} and reapply it to some other datasets ???
+	
+	
+	\subsection{Intuition}
+	\label{sub:intuition}
+		With adversarial learning, we train our classifier to resit to samples that could confuse it. On the paper mentioned above\cite{goodfellow2014explaining}, the authors noticed that some adversarial modifications could be made up to fool drastically the classifier. If you were allowed to twist the pixels' values by $.7\%$, and chose carefully these values, you could mislead your classifier from a $95\%$ accuracy to a low $.7\%$. The twist they proposed was adversarial in the sense that they elected a twist given the current classifier. In other words, it's by knowing the intra-sec properties and weights of the model that they created the adversarial twists. These twists are computed with some math and will be detailed on section \ref{sec:creating_the_adversarial_samples}.
+
+		To take advantage of this observation, we will train our model, not on the casual dataset, but on an adversarial version of it. To be more concrete: instead of forward-propagating the input sample through the model and get the prediction out of it, we will twist the input sample and forward-propagate it. The cost will get is the one of the adversarial samples and not of the original dataset.
+
+		With this modification we hope that the classifier will learn, on the one hand, to recognize a class, like it would normally do, but on the other hand, will learn the differences between classes so that it can better discriminate them. 
+
+		
+
+	\subsection{Creating the adversarial samples}
+	\label{sec:creating_the_adversarial_samples}
+		The adversarial samples will be created from the original samples. We'll allow ourself to modify the pixels by some values. For instance, for an image, if pixels are coded with values between $0$ and $255$ ($0$ being black and $255$ white) we will allow ourselves to modify the pixels values by $\epsilon_{\text{adv}} \times 255$ so that the image looks the same. The modifications will be based on our feed-forward models weights biases and cost function. Concretely, the adversarial modifications will be equal to:
+		$$ \eta = \epsilon_{\text{adv}} \times \text{sign}(\nabla_x \text{Cost}(w,x,y)) $$
+		So that the adversarial samples $x$ becomes:
+		$$ \tilde{x} = x + \eta $$
+		To create an adversarial sample we compute the derivative of the model 
+
+
+	\subsection{Adversarial sample on our simple example}
+	\label{sub:adversarial_sample_on_the_simple_example}
+		Lets now build an example of adversarial sample. As always, we'll use the simple example we've build up (visible on section \ref{sec:weight_initialisation_on_simple_example}) and the sample $x^1$. From those two elements, we'll build-up the adversarial sample corresponding to it.
+
+		We aim at deriving the cost of the model with respect to the inputs $x$. Luckily, we are able to re-use the back-propagation algorithm to compute the derivation. With the notation of section \ref{sec:back_propagation}, we have:
+		\begin{equation}
+			\begin{split}
+				\frac{\nabla_x C}{\partial x } 
+				&= \frac{\partial z^1}{\partial x} \frac{\partial C}{\partial z^1 } \\
+				&= \frac{\partial \left({w^1}^Tx+b^1 \right)}{\partial x} \cdot \delta^1 \\
+				&= w^1 \cdot \delta^1
+			\end{split}
+		\end{equation}
+
+		And the modified sample which is the sum of the sample plus a twist $\eta$ is:
+		\begin{equation}
+			\begin{split}
+				\tilde{x}
+				&= x + \eta \\
+				&= x + \epsilon_{\text{adv}} \times \text{sign}(\nabla_x C) \\
+				&= x + \epsilon_{\text{adv}} \times \text{sign}( w^1 \cdot \delta^1 )
+			\end{split}
+		\end{equation}
+
+		At this point, we know how to compute the compute an adversarial sample. From the last equation, it doesn't clearly appears that an adversarial sample depends on the variables of the model. Taking a closer look into it, we have that an adversarial sample depends on all the variables present on the model. The neurons' weights appears twice. First on the the back-propagation and then on the forward-propagation (the cost) and the biases appears once on the forward-propagation. We also have that the sample class is present on the cost. Therefore, the adversarial sample needs an entire knowledge on the model and on the samples.
+
+		Lets apply this to sample $x^1$ with $\epsilon_{\text{adv}} = .07$:
+		\begin{equation}
+			\begin{split}
+				\widetilde{x^1}
+				&= x^1 + \epsilon_{\text{adv}} \times \text{sign}( w^1 \cdot \delta^1 ) \\
+				&= x^1 + .07 \times \text{sign}
+				\left( \left( \begin{matrix}
+				-10 	& -10 	& 10 \\
+				-10 	& 10 	& -10 \\
+				20 		& 10 	& 10 \\
+				\end{matrix} \right) \cdot
+				\left( \begin{matrix}0 \\ 0.003 \\0.003  \end{matrix} \right) \right)\\
+				&= \left( \begin{matrix} 0 \\   0 \\ 1  \end{matrix} \right) +
+				\left( \begin{matrix}0.07 \\0.07 \\0.07 \end{matrix} \right) \\
+				&= \left( \begin{matrix}0.07 \\0.07 \\1.07 \\\end{matrix} \right)
+			\end{split}
+		\end{equation}
+
+		From this example we can see the adversarial twist put noise in a direction to confuse the model ?? why not decrease of $-.03$ augmented la loss for this given that.
+		With this example, the benefits of adversarial learning are not clearly visible but we hope that the process underlining adversarial learning is understood.
+
+
+
+
+
+
+
+
+
+	\subsection{subsection name} % (fold)
+	\label{sub:subsection_name}
+	
+	% subsection subsection_name (end)
+	on our simple example
+
+	on the cifar10 dataset
+
+	on an other dataset
+
+	on an other, other dataset
