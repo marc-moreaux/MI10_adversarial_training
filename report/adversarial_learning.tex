@@ -50,6 +50,7 @@
 				&= x + \epsilon_{\text{adv}} \times \text{sign}(\nabla_x C) \\
 				&= x + \epsilon_{\text{adv}} \times \text{sign}( w^1 \cdot \delta^1 )
 			\end{split}
+			\label{eq:sample_twist}
 		\end{equation}
 
 		At this point, we know how to compute the compute an adversarial sample. From the last equation, it doesn't clearly appears that an adversarial sample depends on the variables of the model. Taking a closer look into it, we have that an adversarial sample depends on all the variables present on the model. The neurons' weights appears twice. First on the the back-propagation and then on the forward-propagation (the cost) and the biases appears once on the forward-propagation. We also have that the sample class is present on the cost. Therefore, the adversarial sample needs an entire knowledge on the model and on the samples.
