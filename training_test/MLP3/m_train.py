@@ -13,16 +13,17 @@ def big_print(message):
 ##########################################################
 ###  One layer adversarial training
 ##########################################################
-for learning_eps in [.0, .25]:
+for layer_size in [800, 1000, 1200, 1400, 2000]:
+    for learning_eps in [.0, .25]:
 
-    sys.stdout = open("./out_1_"+str(learning_eps)+".txt", "w")
+        sys.stdout = open("./out_1_"+str(learning_eps)+".txt", "w")
 
-    big_print("train ADVERSARIAL ")
-    mlp_yaml = open('mlp11.yaml', 'r').read()
-    mlp_hyper_params = {'learning_eps': learning_eps, 'save_path' : '.'}
-    mlp_yaml = mlp_yaml % mlp_hyper_params
-    train_obj = yaml_parse.load(mlp_yaml)
-    train_obj.main_loop()
+        big_print("train ADVERSARIAL ")
+        mlp_yaml = open('mlp1.yaml', 'r').read()
+        mlp_hyper_params = {'learning_eps': learning_eps, 'save_path' : '.', 'layer_size': layer_size}
+        mlp_yaml = mlp_yaml % mlp_hyper_params
+        train_obj = yaml_parse.load(mlp_yaml)
+        train_obj.main_loop()
 
 
 # ##########################################################

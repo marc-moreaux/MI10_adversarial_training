@@ -20,44 +20,28 @@ def print_result(l_nlls, l_miss):
     print "${0:.4f} \t$&".format(  float(l_nlls[9])       )
     print "${0:.2f}\%\t$&".format((float(l_miss[9]) * 100))
 
-all_nlls = []
-all_miss = []
+
 
 if __name__ == "__main__":
-    for learning_eps in  [.0, .1, .2, .25, .3]: #[.0, .1, .2, .25, .3]:
 
+
+    path = "/media/marc/SAMSUNG_SD_/"
+    for learning_eps in  [.0, .25]: #[.0, .1, .2, .25, .3]:
+    
         print "\n\nlearning eps is ", learning_eps
 
         # To store the results
         nlls = []
         miss = []
-        val = [0, 1]
 
-        Good_to_go = False
-        for line in open("out"+str(learning_eps)+".txt"):
+        
+        with open("out_1_"+str(learning_eps)+".txt") as fp:
+            for line in fp:
+                if re.match("\ttest_y_misclass"+": (?P<tata>[\d\.]+)", line):
+                    miss.append( re.match("\ttest_y_misclass"+": (?P<tata>[\d\.]+)", line).group('tata') )
+                
+        print min(miss)
 
-            # Ignore first 200 values
-            if Good_to_go is False:
-                if re.match("==> Compute adversarial dataset(.)*", line) is not None:
-                    Good_to_go = True
-                    miss.append(val[0].group('tata'))
-                    nlls.append(val[1].group('tata'))
-                else:
-                    if match("test_y_misclass") :
-                        val[0] = match("test_y_misclass")
-                    elif match("test_y_nll") :
-                        val[1] = match("test_y_nll")
-
-            # Print the nll and misclassified vals
-            if Good_to_go:
-                val = match("test_y_misclass")
-                if val is not None:
-                    miss.append(val.group('tata'))
-
-                val = match("test_y_nll")
-                if val is not None:
-                    nlls.append(val.group('tata'))
-
-        print_result(nlls, miss)
-        all_nlls.append(nlls)
-        all_miss.append(miss)
+        # print_result(nlls, miss)
+        # all_nlls.append(nlls)
+        # all_miss.append(miss)
