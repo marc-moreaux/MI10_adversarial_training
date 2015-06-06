@@ -2,15 +2,15 @@
 \section{Introduction} 
 \label{sec:introduction}
 	
-	This machine learning master thesis is about neural networks (section \ref{sec:neural_networks}). 
+	This machine learning master thesis is about neural-networks (section \ref{sec:neural_networks}). We'll investigate on a technique called adversarial-learning to know if it can help neural-networks in performing better.
 
 
 	\subsection{Motivation}
 		At the very beginning of this thesis, there is me, the writer. I wanted, from the very first day, to work on neural-networks and more specifically on deep-learning. I wanted so, because deep-learning has become in the last decade the most efficient algorithm at classifying images. 
-		I was then searching for a topic. I discovered the work made by Ian J. Goodfellow, Jonathon Shlens and Christian Szegedy. In their publication named "Explaining and Harnessing Adversarial Examples"\cite{goodfellow2014explaining} they motivate that adversarial learning could improve the accuracy of some given neural-networks. After contacting one of the authors of this publication, it appeared that it would be a good contribution to validate their observations on other datasets, since most of their test are based on the MNIST dataset\cite{lecun-mnist}. Therefore, the following thesis is about further validating the proposed adversarial-learning method described in \cite{goodfellow2014explaining} with different datasets.
+		I was then searching for a topic. I discovered the work made by Ian J. Goodfellow, Jonathon Shlens and Christian Szegedy. In their publication named "Explaining and Harnessing Adversarial Examples"\cite{goodfellow2014explaining} they motivate that adversarial learning could improve the accuracy of some given neural-networks. After contacting one of the authors of this publication, it appeared that it would be a good contribution to validate their observations on other datasets, since most of their test are based on the MNIST dataset\cite{lecun-mnist}. Therefore, the following thesis is about further validating the proposed adversarial-learning method described in \cite{goodfellow2014explaining} with different parameter and different databases.
 
 	\subsection{Methodology}
-		We are therefore going to investigate on how is adversarial-learning performing with shallow-neural-networks on different datasets. On the same time, we are going to investigate on the reasons underlining this performances. To do so, we will first re-implement the proposed solution of \cite{goodfellow2014explaining} in such a way that we isolate adversarial-learning from other techniques used in the paper. At this point we will emphasize the benefits of adversarial-learning. 
+		We are therefore going to investigate on how is adversarial-learning performing on specific neural-networks called shallow-neural-networks. For the investigation we'll evaluate the impact of some parameters on the network and will also evaluate the model on differnet databases. On the same time, we are going to investigate on the reasons underlining the adversarial performances. To do so, we will first re-implement the proposed solution of \cite{goodfellow2014explaining} in such a way that we isolate adversarial-learning from other techniques used in the paper. At this point we will emphasize the benefits of adversarial-learning. 
 
 		We will then move to another dataset similar to the first one, there will also be 10 different classes of images to classify. That dataset will be the CIFAR10\cite{CIFAR10_BITCHES}. Again, some knowledge will be acquired from this experience. Finally, we will test the adversarial-learning on a dataset of other nature. The one we would try is a phoneme dataset: the TIMIT dataset\cite{maybe...}. The results obtained from this dataset will further validate the technique as useful for classification in the context of shallow-neural-network.
 
@@ -21,7 +21,7 @@
 
 
 	\subsection{Adversarial-learning}
-		Until now, we've been teasing adversarial-learning without explaining what it is about. Lets start off with mentioning what an adversarial sample to a classifier would be. Imagine you have full knowledge of a given classifier. Starting from there, you can create samples to this classifier that are going to give some predictions. Knowing how does the classifier behaves, you can creates samples leading your classifier to some mistakes. This are adversarial samples. In machine learning, adversarial-learning is about creating a classifier resisting to adversarial samples.
+		Until now, we've been speaking a lot of adversarial-learning without explaining what it is about. Lets start off with mentioning what an adversarial sample to a classifier would be. Imagine you have full knowledge of a given classifier. Starting from there, you can create samples to this classifier that are going to give some predictions. Knowing how does the classifier behaves, you can creates samples leading your classifier to some mistakes. This are adversarial samples. In machine learning, adversarial-learning is about creating a classifier resisting to adversarial samples.
 
 		In the publication that interest us\cite{goodfellow2014explaining}, the authors noticed that twisting each pixels of the input images by some very specific values (the adversarial values), an accurate classifier could be easily fooled. Lets detail : Consider you have a classifier able to recognize the MNIST dataset and this classifier makes 10 errors when guessing the classes of 200 samples. Now, if you modify each pixels of these 200 samples by a little value, the classifier makes 180 errors. You've fooled your classifier with adversarial samples.
 
@@ -37,18 +37,18 @@
 		The \textbf{inputs} to our examples are images. They are gray-scaled and have 3 pixels with values in range $[0,1]$. The 3 pixels are aligned in a column such that there is an upper pixel ($x_1$), a middle pixel ($x_2$) and a lower pixel ($x_3$). 
 
 		On the training dataset we have 2 samples for each classes. It is with these examples that we are going to train our classifier.
-		$$ x^1 = \left( \begin{matrix} 0  \\ 0  \\ 1  \end{matrix}\right) \text{ ; }
-		   x^2 = \left( \begin{matrix} 0  \\ .1 \\ .9 \end{matrix}\right) \text{ ; }
+		$$ \boldsymbol{x}^1 = \left( \begin{matrix} 0  \\ 0  \\ 1  \end{matrix}\right) \text{ ; }
+		   \boldsymbol{x}^2 = \left( \begin{matrix} 0  \\ .1 \\ .9 \end{matrix}\right) \text{ ; }
 		   y^1 = y^2 = 1 $$
 
-		$$ x^3 = \left( \begin{matrix} 0  \\ 1  \\ 1  \end{matrix}\right) \text{ ; }
-		   x^4 = \left( \begin{matrix} .1 \\ .9 \\ .9 \end{matrix}\right) \text{ ; }
+		$$ \boldsymbol{x}^3 = \left( \begin{matrix} 0  \\ 1  \\ 1  \end{matrix}\right) \text{ ; }
+		   \boldsymbol{x}^4 = \left( \begin{matrix} .1 \\ .9 \\ .9 \end{matrix}\right) \text{ ; }
 		   y^3 = y^4 = 2 $$
 
-		$$ x^5 = \left( \begin{matrix} 1  \\ 0  \\ 1  \end{matrix}\right) \text{ ; }
-		   x^6 = \left( \begin{matrix} .9 \\ .1 \\ .9 \end{matrix}\right) \text{ ; }
+		$$ \boldsymbol{x}^5 = \left( \begin{matrix} 1  \\ 0  \\ 1  \end{matrix}\right) \text{ ; }
+		   \boldsymbol{x}^6 = \left( \begin{matrix} .9 \\ .1 \\ .9 \end{matrix}\right) \text{ ; }
 		   y^5 = y^6 = 3 $$
-		Where $x^i$ refer to the input sample $i$ and $y^i$ refer to the class of sample $i$.
+		Where $\boldsymbol{x}^i$ refer to the input sample $i$ and $y^i$ refer to the class of sample $i$.
 
 		The \textbf{model} we are going to use is a neural-network. Because it has few layers, it's also referred as a shallow-neural-network. Our simple neural-network will have 3 inputs, one for each pixel of the images, 3 hidden neurons and 3 output neurons. \Fref{fig:simple_NN} is a graphical representation of our model.
 
@@ -92,8 +92,8 @@
 			    \node[annot,above of=P-1, node distance=1cm] () {Predictions};
 
 			\end{tikzpicture}
-			\label{fig:simple_NN}
 			\caption{Simple example of shallow-neural-network}
+			\label{fig:simple_NN}
 		\end{figure}
 
 
