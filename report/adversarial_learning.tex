@@ -147,13 +147,18 @@
 			And the confidence reflects how much the model was sure of which ever predictions it made 
 			$$\text{conf} =  \text{mean}( \text{argmax} (\text{predictions}))$$
 
-			TODO: ANALYSIS
 			\begin{figure}
 				\centering
-				\includegraphics[width=0.7\textwidth]{/home/marc/git/MI10_adversarial_training/training_test/MLP3/mem/bar_acc_all.png}
+				\includegraphics[width=0.7\textwidth]{/home/marc/git/MI10_adversarial_training/training_test/MLP3/mem/bar_neuron_impact.png}
 				\caption{Comparing the amount of neurons' impact on non-adversarial and adversarial models. Every pair represent a non-adversarial-learning and an adversarial-learning trained with a certain amount of hidden neurons.}
 				\label{fig:mnist_neurons}
 			\end{figure}
+			
+			Looking at this graph (\fref{fig:mnist_neurons}), the first thing we notice is that adversarial-learning performs worse than non-adversarial-learning for models with less than a hundred neurons. When we deal with 5 hidden neurons, adversarial model is 17 percent points less accurate than the non-adversarial model. With this observation we can hypothesize that adversarial model can't properly synthesize what it sees with so few functions (neurons). Therefore it introduces more inaccuracy in the functions it learns.
+
+			What we find more relevant is the following: the adversarial-learning plateaus at 400 neurons whereas non-adversarial-learning plateau in between 50 and 100 neurons. In other words, adversarial-learning need far more neurons (far more functions) to reach its best accuracy. From this observation, and from the insight of the universal approximator \cite{hornik1989multilayer}, we can say that adversarial-learning learns more functions than the other model does. Which is to say that the adversarial-learning method is not about having the same kind of model but one being more accurate than the other. It's about having a new model learning far more  functions. 
+
+			Also, as the adversarial-learning models converges slower than the other model, I would say that adversarial-learning learns a whole set of new functions. If it were not the case, We would expect the adversarial models to be at least as good as the non-adversarial.
 
 
 
@@ -163,14 +168,14 @@
 			$$ \boldsymbol{x} + \epsilon_{\text{adv}} \times \text{sign}(\nabla_{\boldsymbol{x}} C) $$
 			In this subsection, we want to evaluate the impact of this value on the learning. We are going to expose the learning of a 800 hidden-neurons net trained with different $\epsilon_{\text{adv}}$. Even though, we expect an increased accuracy with an increased epsilon, we don't have any idea on which epsilon would be better. 
 
-			TODO: 800 + MANY EPSILONS_ADV
-
 			\begin{figure}
 				\centering
-				\includegraphics[width=0.7\textwidth]{/home/marc/git/MI10_adversarial_training/training_test/MLP3/mem/plot_test_800.png}
-				\caption{Evaluate non-adversarial and adversarial models of 800 hidden neurons .}
-				\label{fig:mnist_neurons}
+				\includegraphics[width=0.7\textwidth]{/home/marc/git/MI10_adversarial_training/training_test/MLP3/mem/bar_eps_imapct.png}
+				\caption{Evaluate non-adversarial and adversarial models of 800 hidden neurons.}
+				\label{fig:mnist_adv_eps}
 			\end{figure}
+			
+			\Fref{fig:mnist_adv_eps} seems to reveal that a good adversarial epsilon for this dataset and given a model of 800 neurons is located between $.05$ and $.3$. On the figure we plotted, the optimum value for the adversarial epsilon seems to be $.1$. On this same plot, we can see that the confidence for the predictions falls down as the adversarial epsilon raises. We don't know what these two informations teaches us towards adversarial-learning but that low epsilon value seems to perform better on both accuracy and confidence.
 
 
 		\subsubsection{Compare to noisy dataset} 
@@ -181,27 +186,42 @@
 			
 			\begin{figure}
 				\centering
-				\includegraphics[width=0.7\textwidth]{/home/marc/git/MI10_adversarial_training/training_test/MLP3/mem/plot_test_800.png}
-				\caption{Evaluate non-adversarial and adversarial models of 800 hidden neurons on noisy test-sets with different standard deviations.}
-				\label{fig:mnist_neurons}
+				\includegraphics[width=0.4\textwidth]{/home/marc/git/MI10_adversarial_training/training_test/MLP3/mem/bar_testset_impact_adv.png}
+				\includegraphics[width=0.4\textwidth]{/home/marc/git/MI10_adversarial_training/training_test/MLP3/mem/bar_testset_impact_norm.png}
+				\caption{Evaluate non-adversarial (dashed line) and adversarial models (plain line) of 800 hidden neurons on modified test-sets. On the left, we try the two models on an adversarial test-dataset. The horizontal axis represents the epsilon values used to modified the test-set. On the right, we try the two models on an normal-distribution-modified test-dataset with different standard deviations.}
+				\label{fig:mnist_adv_noisy_ds}
+			\end{figure}
+			\begin{figure}
+				\centering
+				\includegraphics[width=0.4\textwidth]{/home/marc/git/MI10_adversarial_training/training_test/MLP3/mem/bar_testset_impact_norm.png}
+				\caption{Extract of the test-set with the same image with different standard deviations. From left to right: $\rho = [.0, .1, .2, .3]$}
+				\label{fig:mnist_adv_noisy_ds_img}
 			\end{figure}
 
 
+			With the left plot of \fref{fig:mnist_adv_noisy_ds}, we confirm that adversarial-learning easily fools a usual feed-forward model. Twisting the pixels by $10\%$ in the direction of the worst case (our adversarial case),drastically confuse the original model. Now, trying to full the adversarial-model with this same technique doesn't work as good. The adversarial-model can't be fooled as easily. 
 
-		\subsubsection{Train with noisy dataset} % (fold)
+			With the plot on the right, we compare the accuracy of both the models on another twisted dataset. This time, the adversarial-model keeps an advantage until the dataset becomes too noisy $\rho=.22$. This result is a bit contradictory with our expectations. In fact, we would have expected that adding noise to this test-set would have fooled more the non-adversarial model than the adversarial one. The reason being that adversarial-learning was supposed to better generalize the underlining distribution of the test-set and therefore be less dependent on noise.
+
+			Despite this, the adversarial-model still outperforms the other one on this modified test-set before the test-set gets really noisy ($\rho>.22$ )
+
+
+
+		\subsubsection{Train with noisy dataset}
 		\label{ssub:train_with_noisy_dataset}
 			Here we want to see how is adversarial-learning doing compared to another idea. Right before we mentioned the motivation for adversarial-learning (too much dependence on underlining distribution). Adversarial-learning came as an idea to be less dependent on this underlining distribution. On this section, we are going to introduce noise on the learning dataset 
 			Here we try another learning technique to compare with adversarial-learning. As a recall, adversarial-learning modified the input samples towards a worst case prediction given the model. Now, instead of modifying the input sample by this worst case sample, we'll modify the sample by a random noise. The random noise added to the learning dataset will be under a normal distribution with a standard deviation of $.25$. We don't necessary expect this learning to be better at classifying but we hope that it can better resist to adversarial samples. If it does, it could support that usual training is too much linear.
 
 			\begin{figure}
 				\centering
-				\includegraphics[width=0.7\textwidth]{/home/marc/git/MI10_adversarial_training/training_test/MLP3/mem/plot_test_norm_800.png}
+				\includegraphics[width=0.4\textwidth]{/home/marc/git/MI10_adversarial_training/training_test/MLP3/mem/bar_testset_impact_2_adv.png}
+				\includegraphics[width=0.4\textwidth]{/home/marc/git/MI10_adversarial_training/training_test/MLP3/mem/bar_testset_impact_2_norm.png}
 				\caption{Evaluate casual, adversarial and noisy models of 800 hidden neurons on noisy test-sets and adversarial datasets.}
 				\label{fig:mnist_neurons}
 			\end{figure}
 
 			
-		\subsubsection{Visualizing weights} % (fold)
+		\subsubsection{Visualizing weights}
 		\label{ssub:visualizing_weights}
 			We've also tried to compare the weights of each of the 
 		
