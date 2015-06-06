@@ -9,11 +9,11 @@ from pylearn2.utils import serial
 from pylearn2.datasets import dense_design_matrix
 from pylearn2.format.target_format import convert_to_one_hot
 
-
-
-test_eps_array = [.0,.1,.2,.25,.3]
+data ={1:{}, 2:{}, 3:{}}
+models = [1,2,3]
 test_eps_array = [.0,.05,.1,.15,.2,.25,.3,.35]
 costs = [.0,.1,.2,.25,.3]
+costs = [.0]
 ds_s = ['adv', 'norm', 'uni']
 
 
@@ -142,9 +142,11 @@ class Model_used():
 	# Output the neurons layer sizes
 	def print_type(self):
 		if self.type == 1:
-			return "1200 + 10"
+			return "1200 + 10 -&- ADV"
 		if self.type == 2:
-			return "1200 + 1200 + 10"
+			return "1200 + 1200 + 10 -&- ADV"
+		if self.type == 3:
+			return "1200 + 10 -&- L2"
 
 	# Print of class
 	def __str__(self):
@@ -159,9 +161,7 @@ class Model_wapper():
 		self.a = 1
 
 	def load_all(self):
-
 		# Create data dictionary
-		data ={1:{}, 2:{}}
 		for model in data:
 			data[model] = {.0:{}, .1:{}, .2:{}, .25:{}, .3:{}}
 			for cost in data[model]:
@@ -215,5 +215,5 @@ if __name__ == "__main__":
 	# Draw some stuff
 	wrapper = Model_wapper()
 	wrapper.load_all()
-	wrapper.print_given_model_ds(1, 'norm')
-	wrapper.print_given_model_ds(1, 'uni')
+	wrapper.print_given_model_ds(3, 'norm')
+	wrapper.print_given_model_ds(3, 'uni')
