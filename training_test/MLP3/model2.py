@@ -1,9 +1,11 @@
+import math
 import theano 
 import os.path
 import numpy as np
 import pickle as pkl
 import my_preprocessors as preproc
 import matplotlib.pyplot as plt
+import matplotlib.cm as cm
 
 from pylearn2.utils import serial
 from pylearn2.datasets import dense_design_matrix
@@ -256,11 +258,67 @@ def plot_test_set_impact_other(test_set_modif='norm', save_name=None):
         plt.show()
 
 
-plot_neurons_impact("neuron_impact")
+def plot_weights(nb_neurons, save_name=None):
 
-plot_epsilon_impact("eps_imapct")
+    plt.figure()
+    for plot_row, eps_adv in enumerate([.0, .25]):
+        m_used = Model_used(eps_adv, nb_neurons)
+        
+        nb_plots = min(nb_neurons ,5)
+        for i in range(nb_plots):
+            plt.subplot(2, nb_plots, i+(plot_row-1)*nb_plots)
+            
+            w1_1 = m_used.model.layers[0].get_weights()[:,i]
+            w_shape = int(math.sqrt(w1_1.shape[0]))
+            plt.imshow(w1_1.reshape((w_shape,w_shape)), cmap = cm.Greys_r)
 
-plot_test_set_impact('norm',"testset_impact_norm")
-plot_test_set_impact('adv' ,"testset_impact_adv")
-plot_test_set_impact_other('norm',"testset_impact_2_norm")
-plot_test_set_impact_other('adv' ,"testset_impact_2_adv")
+    if save_name is not None:
+        plt.savefig('./mem/bar_'+save_name+"_"+str(nb_neurons)+'.png', dpi=100)
+    else:
+        plt.show()
+
+
+def plot_weights_class(nb_neurons, save_name=None):
+
+    plt.figure()
+    for plot_row, eps_adv in enumerate([.0, .25]):
+        m_used = Model_used(eps_adv, nb_neurons)
+        
+        nb_plots = 5
+        for i in range(nb_plots):
+            i=i+1
+            plt.subplot(2, nb_plots, i+(plot_row-1)*5)
+            w1_1 = m_used.model.layers[0].get_weights() # size : (in, nb_neurons)
+            w2_1 = m_used.model.layers[1].get_weights()[:,i] # size : (nb_neurons, 1)
+            w2_1.reshape((1,-1))
+            w_shape = int(math.sqrt(w1_1.shape[0]))
+            tmp = np.multiply(w1_1, w2_1)
+            tmp = tmp.sum(axis=1)
+            plt.imshow(tmp.reshape((w_shape,w_shape)), cmap = cm.Greys_r)
+
+    if save_name is not None:
+        plt.savefig('./mem/bar_'+save_name+"_"+str(nb_neurons)+'.png', dpi=100)
+    else:
+        plt.show()
+
+
+
+
+
+
+# plot_neurons_impact("neuron_impact")
+
+# plot_epsilon_impact("eps_imapct")
+
+# plot_test_set_impact('norm',"testset_impact_norm")
+# plot_test_set_impact('adv' ,"testset_impact_adv")
+# plot_test_set_impact_other('norm',"testset_impact_2_norm")
+# plot_test_set_impact_other('adv' ,"testset_impact_2_adv")
+
+plot_weights(2,"weight")
+plot_weights(5,"weight")
+plot_weights(800,"weight")
+plot_weights_class(2,"weight_class")
+plot_weights_class(5,"weight_class")
+plot_weights_class(25,"weight_class")
+plot_weights_class(800,"weight_class")
