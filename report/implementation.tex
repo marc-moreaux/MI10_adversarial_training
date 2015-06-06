@@ -117,7 +117,7 @@ class AdversarialCost(DefaultDataSpecsMixin, Cost):
 !obj:pylearn2.train.Train {
   dataset: &train !obj:pylearn2.datasets.
         dense_design_matrix.DenseDesignMatrix {
-    X: !pkl: '/home/marc/data/mnist_train_X.pkl',
+    X: !pkl: '/home/marc/data/mnist_train_y_train_X.pkl',
     y: !pkl: '/home/marc/data/mnist_train_y.pkl',
     y_labels: 10,
   },

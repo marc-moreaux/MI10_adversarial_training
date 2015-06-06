@@ -65,7 +65,7 @@
     extensions: [
            !obj:pylearn2.train_extensions.best_params.MonitorBasedSaveBest {
              channel_name: 'valid_y_misclass',
-             save_path: "%(save_path)s/mem/mlp_MNIST_%(learning_eps)s_%(layer_size)s.pkl",
+             save_path: "%(save_path)s/mem2/mlp_MNIST_%(learning_eps)s_%(layer_size)s.pkl",
         }, !obj:pylearn2.training_algorithms.learning_rule.MomentumAdjustor {
             start: 1,
             saturate: 10,

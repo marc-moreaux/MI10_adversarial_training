@@ -22,24 +22,47 @@ X = pkl.load(open("/home/marc/data/mnist_test_X.pkl"))
 y = pkl.load(open("/home/marc/data/mnist_test_y.pkl"))
 
 
-# Loop over the models
-for learning_eps in [.0, .1 ,.2, .25, .3]:
+###########################################
+### Test over the models of 1 and 2
+###########################################
+# for model in [1,2]:
+# 	for learning_eps in [.0, .1 ,.2, .25, .3]:
 
-	# Initialize model used
-	used_model = model.Model_used(1,learning_eps)
-	print used_model
+# 		# Initialize model used
+# 		used_model = model.Model_used(1,learning_eps)
+# 		print used_model
 
-	# Adversarial test
-	used_model.test(dataset=(X, y), test_type='adv')
-	used_model.draw(test_type='adv')
-	used_model.test(dataset=(X, y), test_type='norm')
-	used_model.draw(test_type='norm')
-	used_model.test(dataset=(X, y), test_type='uni')
-	used_model.draw(test_type='uni')
+# 		# Adversarial test
+# 		used_model.test(dataset=(X, y), test_type='adv')
+# 		used_model.draw(test_type='adv')
+# 		used_model.test(dataset=(X, y), test_type='norm')
+# 		used_model.draw(test_type='norm')
+# 		used_model.test(dataset=(X, y), test_type='uni')
+# 		used_model.draw(test_type='uni')
 
-	# Update sumup array
-	sumup_acc.append(used_model.acc)
-	sumup_nll.append(used_model.nll)
+# 		# Update sumup array
+# 		sumup_acc.append(used_model.acc)
+# 		sumup_nll.append(used_model.nll)
+
+
+###########################################
+### Test the model 3
+###########################################
+# Initialize model used
+used_model = model.Model_used(3)
+print used_model
+
+# Adversarial test
+used_model.test(dataset=(X, y), test_type='adv')
+used_model.draw(test_type='adv')
+used_model.test(dataset=(X, y), test_type='norm')
+used_model.draw(test_type='norm')
+used_model.test(dataset=(X, y), test_type='uni')
+used_model.draw(test_type='uni')
+
+# Update sumup array
+sumup_acc.append(used_model.acc)
+sumup_nll.append(used_model.nll)
 
 
 # Print the output

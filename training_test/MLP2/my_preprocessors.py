@@ -115,6 +115,8 @@ def make_adv_training_set(learning_eps, training_eps=0.07):
     train_pkl_path = 'mnist_train_adv.pkl'
     serial.save(train_pkl_path, train)
 
+
+
 if __name__ == "__main__":
 
     # Open dataset

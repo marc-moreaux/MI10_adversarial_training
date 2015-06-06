@@ -13,8 +13,8 @@ def big_print(message):
 ##########################################################
 ###  One layer adversarial training
 ##########################################################
-for layer_size in [800, 1000, 1200, 1400, 2000]:
-    for learning_eps in [.0, .25]:
+for layer_size in [100]:
+    for learning_eps in [.0,.25]:
 
         sys.stdout = open("./out_1_"+str(learning_eps)+".txt", "w")
 
