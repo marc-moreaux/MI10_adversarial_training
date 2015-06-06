@@ -7,7 +7,7 @@ from pylearn2.space import CompositeSpace, NullSpace, VectorSpace
 from pylearn2.datasets import cifar10, preprocessing, dense_design_matrix
 from pylearn2.costs.cost import Cost, DefaultDataSpecsMixin
 from pylearn2.utils.data_specs import DataSpecsMapping
-
+from theano.tensor.shared_randomstreams import RandomStreams
 
 
 class AdversarialCost(DefaultDataSpecsMixin, Cost):
@@ -18,8 +18,9 @@ class AdversarialCost(DefaultDataSpecsMixin, Cost):
 
     supervised = True
 
-    def __init__(self, learning_eps):
+    def __init__(self, learning_eps, do_normal_learn=False):
         self.learning_eps = learning_eps
+        self.do_normal_learn = do_normal_learn
         
 
     def expr(self, model, data, **kwargs):
@@ -43,7 +44,16 @@ class AdversarialCost(DefaultDataSpecsMixin, Cost):
         space.validate(data)
         X, y = data
         alpha = .5
-        adv_X = X + self.learning_eps * T.sgn(T.grad(model.cost_from_X(data), X))
+
+
+        if self.do_normal_learn == True:
+            distr = RandomStreams(seed=234).normal(X.shape)
+            noise = .25 * distr
+            adv_X = X + noise
+        else :            
+            adv_X = X + self.learning_eps * T.sgn(T.grad(model.cost_from_X(data), X))
+
+
         adv_data = (adv_X, y)
 
         return alpha*model.cost_from_X(data) + (1-alpha)*model.cost_from_X(adv_data)
