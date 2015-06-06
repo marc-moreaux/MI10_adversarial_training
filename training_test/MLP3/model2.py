@@ -44,13 +44,13 @@ class Model_used():
         #
         return self.model.fprop(theano.shared(x, name='inputs')).eval()
 
-    # return confidance towards input x
+    # return confidence towards input x
     def confidence(self, x):
         predictions = self.predict(x)
         confidence = np.max(predictions, axis=1)
         return confidence.mean()*100
 
-    # get missclassification rate of given model
+    # get misclassification rate of given model
     def accuracy(self, data):
         x,y = data
         pred = self.predict(x)
@@ -90,59 +90,62 @@ class Test_set():
 
 
 def plot_neurons_impact(save_name=None):
-    
     # Prepare data
     tmp = Test_set()
     data = tmp.get_data()
-    
+
+    a = Model_used(.0,100)
+    a.accuracy(data)
+
     models_used = []
     acc = []
     conf = []
-    for eps_adv in [.0, .25]:
-        for nb_neurons in [2,5,25,50,100,400,800,1200,2000]:
+    for nb_neurons in [2,5,25,50,100,400,800,1200,2000]:
+        for eps_adv in [.0, .25]:
             tmp = Model_used(eps_adv,nb_neurons)
             models_used.append(tmp)
             acc.append(tmp.accuracy(data))
             conf.append(tmp.confidence(data[0]))
 
-        nb_models = len(models_used)
-        x = []
-        for i in range(nb_models):
-            if i%2 == 0: # 
-                i += .2
-            x.append(i)
+    nb_models = len(models_used)
+    x = []
+    for i in range(nb_models):
+        if i%2 == 0: # 
+            i += .2
+        x.append(i)
 
-        # plot the figure
-        plt.figure()
+    # plot the figure
+    plt.figure()
 
-        x  = np.array(x)
-        y1 = np.array(acc)
-        y2 = np.array(conf)
-        y_min = min(y1.min(), y2.min()) -2
-        y_max = max(y1.max(), y2.max())
+    x  = np.array(x)
+    y1 = np.array(acc)
+    y2 = np.array(conf)
+    y_min = min(y1.min(), y2.min()) -2
+    y_max = max(y1.max(), y2.max())
 
-        # plot the bars
-        plt.bar(x, +y1-y_min, facecolor='#9999ff', edgecolor='white')
-        plt.bar(x, -y2+y_min, facecolor='#ff9999', edgecolor='white')
+    # plot the bars
+    plt.bar(x, +y1-y_min, facecolor='#9999ff', edgecolor='white')
+    plt.bar(x, -y2+y_min, facecolor='#ff9999', edgecolor='white')
 
-        # print the values
-        for _x,_y1,_y2 in zip(x,y1,y2):
-            plt.text(_x+0.4,  _y1-y_min+0.05, '%.1f' % _y1, ha='center', va= 'bottom')
-            plt.text(_x+0.4, -_y2+y_min-0.05, '%.1f' % _y2, ha='center', va= 'top')
+    # print the values
+    for _x,_y1,_y2 in zip(x,y1,y2):
+        plt.text(_x+0.4,  _y1-y_min+0.05, '%.1f' % _y1, ha='center', va= 'bottom')
+        plt.text(_x+0.4, -_y2+y_min-0.05, '%.1f' % _y2, ha='center', va= 'top')
 
-        # print the text
-        for x,m_used in zip(range(nb_models/2), models_used):
-            if m_used.learning_eps == .25:
-                continue
-            plt.text(x*2+1, 0, '%s' % m_used.nb_neurons, ha='center', va= 'bottom')
+    # print the text
+    for x,m_used in zip(range(nb_models), models_used):
+        print str(x)+'_'+str(m_used.nb_neurons)
+        if m_used.learning_eps == .25:
+            continue
+        plt.text(x+1, 0, '%s' % m_used.nb_neurons, ha='center', va= 'bottom')
 
-        plt.text(-.6,  y_max/3, 'Accuracy',   rotation='vertical', verticalalignment='center')
-        plt.text(-.6, -y_max/3, 'Confidence', rotation='vertical', verticalalignment='center')
+    plt.text(-.6,  y_max/3, 'Accuracy',   rotation='vertical', verticalalignment='center')
+    plt.text(-.6, -y_max/3, 'Confidence', rotation='vertical', verticalalignment='center')
 
 
-        # set axis
-        plt.xlim(-1,nb_models+.5), plt.xticks([])
-        plt.ylim(-np.max(y2-y_min)-5,np.max(y1-y_min)+5), plt.yticks([])
+    # set axis
+    plt.xlim(-1,nb_models+.5), plt.xticks([])
+    plt.ylim(-np.max(y2-y_min)-5,np.max(y1-y_min)+5), plt.yticks([])
 
 
     if save_name is not None:
@@ -172,7 +175,8 @@ def plot_epsilon_impact(save_name=None):
     y_min = min(y1.min(), y2.min()) -2
     y_max = max(y1.max(), y2.max())
 
-    plt.plot(x, y1, x, y2)
+    plt.plot(x, y1)
+    plt.plot(x, y2, linestyle='dashed')
 
     if save_name is not None:
         plt.savefig('./mem/bar_'+save_name+'.png', dpi=100)
@@ -256,11 +260,24 @@ def plot_test_set_impact_other(test_set_modif='norm', save_name=None):
         plt.show()
 
 
+def plot_testset_noisy(noise='adv'):
+
+model_used = Model_used(.25,800)
+t_set = Test_set()
+
+plt.figure()
+for eps_noise in [.0, .1, .2, .3]
+    data = t_set.modified_dataset(noise, eps_noise, model_used)
+    
+
+
+
+
 plot_neurons_impact("neuron_impact")
 
-plot_epsilon_impact("eps_imapct")
+# plot_epsilon_impact("eps_impact")
 
-plot_test_set_impact('norm',"testset_impact_norm")
-plot_test_set_impact('adv' ,"testset_impact_adv")
-plot_test_set_impact_other('norm',"testset_impact_2_norm")
-plot_test_set_impact_other('adv' ,"testset_impact_2_adv")
+# plot_test_set_impact('norm',"testset_impact_norm")
+# plot_test_set_impact('adv' ,"testset_impact_adv")
+# plot_test_set_impact_other('norm',"testset_impact_2_norm")
+# plot_test_set_impact_other('adv' ,"testset_impact_2_adv")
