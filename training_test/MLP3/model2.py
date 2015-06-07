@@ -14,16 +14,21 @@ from pylearn2.format.target_format import convert_to_one_hot
 from my_preprocessors import Normal_modif
 from my_preprocessors import Adversarial_modif
 
+from random import randint
+
 
 class Model_used():
-    def __init__(self, learning_eps='.25', nb_neurons=800, model_type='adv', db="MNIST"):
+    def __init__(self, learning_eps='.25', nb_neurons=800, model_type='adv', db_name="MNIST"):
         self.model_type = model_type;
         self.learning_eps = learning_eps;
         self.nb_neurons = nb_neurons
-        self.db = db
+        self.db_name = db_name
+
+        if db_name == 'CIFAR':
+            self.nb_neurons = 2500
 
         # set name
-        self.model_name = str(learning_eps)+"_"+str(nb_neurons)
+        self.model_name = str(self.learning_eps)+"_"+str(self.nb_neurons)
         if model_type == 'norm':
             self.model_name = self.model_name+"_norm"
         
@@ -32,7 +37,7 @@ class Model_used():
 
 
     def load(self):
-        path_model = "./mem/mlp_"+self.db+"_"+self.model_name+".pkl"
+        path_model = "./mem/mlp_"+self.db_name+"_"+self.model_name+".pkl"
         if os.path.isfile(path_model):
             model = serial.load(path_model)
         else:
@@ -67,13 +72,18 @@ class Model_used():
 
 
 class Test_set():
-    def __init__(self, db="MNIST"):
+    def __init__(self, db_name="MNIST"):
         # load test set
-        if db == 'MNIST':
+        if db_name == 'MNIST':
             x_path = '/home/marc/data/mnist_test_X.pkl'
             y_path = '/home/marc/data/mnist_test_y.pkl'
+        if db_name == 'CIFAR':
+            x_path = '/media/marc/SAMSUNG_SD_/data/test_X.pkl'
+            y_path = '/media/marc/SAMSUNG_SD_/data/test_y.pkl'
+
         self.x = pkl.load(open(x_path))
         self.y = pkl.load(open(y_path))
+
 
     def get_data(self):
         #
@@ -86,6 +96,8 @@ class Test_set():
             ds.apply_preprocessor(preprocessor=Adversarial_modif(model_used.model, model_used.learning_eps, eps_to_modif), can_fit=True)
         elif m_type == 'norm':
             ds.apply_preprocessor(preprocessor=Normal_modif('norm', eps_to_modif), can_fit=True)
+        elif m_type == 'none':
+            return ds.X, self.y
 
         return ds.X, self.y
 
@@ -186,8 +198,8 @@ def plot_epsilon_impact(save_name=None):
         plt.show()
 
 
-def plot_test_set_impact(test_set_modif='norm', save_name=None):
-    t_s = Test_set()
+def plot_test_set_impact(bd_name='MNIST', test_set_modif='norm', save_name=None):
+    t_s = Test_set(bd_name)
 
     x = [.0,.05,.1,.15,.2,.25,.3]
     models_used = []
@@ -196,7 +208,7 @@ def plot_test_set_impact(test_set_modif='norm', save_name=None):
     # conf = []
     for eps_test in x:
         for eps_adv in [.0, .25]:
-            tmp_model = Model_used(eps_adv,800)
+            tmp_model = Model_used(eps_adv,800,'adv', bd_name)
             models_used.append(tmp_model)
             data = t_s.modified_dataset(test_set_modif,eps_test,tmp_model)
             if eps_adv == .0:
@@ -264,26 +276,29 @@ def plot_test_set_impact_other(test_set_modif='norm', save_name=None):
 
 def plot_weights(nb_neurons, save_name=None):
 
+
     plt.figure()
     for plot_row, eps_adv in enumerate([.0, .25]):
         m_used = Model_used(eps_adv, nb_neurons)
         
         nb_plots = min(nb_neurons ,5)
         for i in range(nb_plots):
-            plt.subplot(2, nb_plots, i+(plot_row-1)*nb_plots)
+            plt.subplot(2, nb_plots, i+1+plot_row*nb_plots)
             
-            w1_1 = m_used.model.layers[0].get_weights()[:,i]
+            w1_1 = m_used.model.layers[0].get_weights()[:,randint(0,nb_neurons-1)]
             w_shape = int(math.sqrt(w1_1.shape[0]))
             plt.imshow(w1_1.reshape((w_shape,w_shape)), cmap = cm.Greys_r)
+            plt.axis('off')
 
     if save_name is not None:
-        plt.savefig('./mem/bar_'+save_name+"_"+str(nb_neurons)+'.png', dpi=100)
+        plt.savefig('./mem/bar_'+save_name+"_"+str(nb_neurons)+'.png', dpi=100, bbox_inches='tight')
     else:
         plt.show()
 
 
 def plot_weights_class(nb_neurons, save_name=None):
 
+    
     plt.figure()
     for plot_row, eps_adv in enumerate([.0, .25]):
         m_used = Model_used(eps_adv, nb_neurons)
@@ -291,31 +306,72 @@ def plot_weights_class(nb_neurons, save_name=None):
         nb_plots = 5
         for i in range(nb_plots):
             i=i+1
-            plt.subplot(2, nb_plots, i+(plot_row-1)*5)
+            plt.subplot(2, nb_plots, i+(plot_row)*nb_plots)
             w1_1 = m_used.model.layers[0].get_weights() # size : (in, nb_neurons)
             w2_1 = m_used.model.layers[1].get_weights()[:,i] # size : (nb_neurons, 1)
-            w2_1.reshape((1,-1))
             w_shape = int(math.sqrt(w1_1.shape[0]))
-            tmp = np.multiply(w1_1, w2_1)
-            tmp = tmp.sum(axis=1)
+            tmp = w1_1.dot(w2_1)
             plt.imshow(tmp.reshape((w_shape,w_shape)), cmap = cm.Greys_r)
+            plt.axis('off')
+            plt.xlabel(str(i))
 
     if save_name is not None:
-        plt.savefig('./mem/bar_'+save_name+"_"+str(nb_neurons)+'.png', dpi=100)
+        plt.savefig('./mem/bar_'+save_name+"_"+str(nb_neurons)+'.png', dpi=100, bbox_inches='tight')
     else:
         plt.show()
 
 
-def plot_testset_noisy(noise='adv'):
+def plot_testset_noisy(noise='adv', use_norm=False, save_name=None):
+    if use_norm is False:
+        model_used = Model_used(.25,800)
+    else :
+        model_used = Model_used(.25,800,'norm')
+    t_set = Test_set()
 
-model_used = Model_used(.25,800)
-t_set = Test_set()
+    plt.figure()
+    for i, eps_noise in  enumerate([.0, .1, .2, .3]):
+        data = t_set.modified_dataset(noise, eps_noise, model_used)
+        x = data[0][1,:]
+        x.shape
+        x_shape = int(math.sqrt(x.shape[0]))
+        plt.subplot(1,4,i+1)
+        plt.imshow(x.reshape((x_shape,x_shape)), cmap = cm.Greys_r)
+        plt.axis('off')
+        plt.xlabel(eps_noise)
+        if i == 0:
+            plt.ylabel(noise)
 
-plt.figure()
-for eps_noise in [.0, .1, .2, .3]
-    data = t_set.modified_dataset(noise, eps_noise, model_used)
+    if save_name is not None:
+        plt.savefig('./mem/bar_'+save_name+'.png', dpi=100, bbox_inches='tight')
+    else:
+        plt.show()
+
+
+def plot_orig_testset(db_name='MNIST', save_name=None):
     
+    t_set = Test_set(db_name)
 
+    plt.figure()
+    for i in range(7):
+        data = t_set.get_data()
+        x = data[0][i,:]
+        x_shape = int(math.sqrt(x.shape[0]))
+        plt.subplot(1,7,i+1)
+        plt.axis('off')
+        plt.imshow(x.reshape((x_shape,x_shape)), cmap = cm.Greys_r)
+        
+
+    if save_name is not None:
+        plt.savefig('./mem/bar_'+save_name+'.png', dpi=100, bbox_inches='tight')
+    else:
+        plt.show()
+
+
+
+# m_used = Model_used(.25,2500,'adv','CIFAR')
+# test_s = Test_set('CIFAR')
+
+# print m_used.accuracy(test_s.get_data())
 
 
 
@@ -323,15 +379,24 @@ for eps_noise in [.0, .1, .2, .3]
 
 # plot_epsilon_impact("eps_imapct")
 
-# plot_test_set_impact('norm',"testset_impact_norm")
-# plot_test_set_impact('adv' ,"testset_impact_adv")
+# plot_test_set_impact('MNIST', 'norm',"testset_impact_norm")
+# plot_test_set_impact('MNIST', 'adv' ,"testset_impact_adv")
 # plot_test_set_impact_other('norm',"testset_impact_2_norm")
 # plot_test_set_impact_other('adv' ,"testset_impact_2_adv")
 
-plot_weights(2,"weight")
-plot_weights(5,"weight")
-plot_weights(800,"weight")
-plot_weights_class(2,"weight_class")
-plot_weights_class(5,"weight_class")
-plot_weights_class(25,"weight_class")
-plot_weights_class(800,"weight_class")
+# for nb_neurons in [2,5,100,800,2000]:
+#     plot_weights(nb_neurons,"weight")
+
+# for nb_neurons in [2,5,25,50,100,400,800,1200,1400,2000]:
+#     plot_weights_class(nb_neurons,"weight_class")
+
+# plot_testset_noisy('adv' , False, "noisy_ts_adv")
+# plot_testset_noisy('norm', False, "noisy_ts_norm")
+# plot_testset_noisy('adv' , True, "noisy_ts_adv_norm")
+
+
+
+# CIFAR 10
+
+# plot_test_set_impact('CIFAR', 'norm' ,"testset_impact_norm_CIFAR")
+plot_orig_testset('CIFAR', 'orig_CIFAR')
