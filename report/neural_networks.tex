@@ -1,5 +1,5 @@
 
-\section{Neural-Networks}
+\chapter{Neural-Networks}
 \label{sec:neural_networks}
 
 	In this section we will see how neural-network manage to solve classification tasks. As a reminder, a classification problem aims at identifying the sub-populations of a set belonging to a class. More specifically: if we are given a set of inputs $X$ and outputs $Y$. where $\boldsymbol{x}^i$ denotes a sample from the set $X$ and $y^i$ its class. Then, the aim of classification is to predict the class a new sample given the knowledge based on the $\boldsymbol{x}^i$'s.
@@ -8,8 +8,10 @@
 
 	In this section, we will first introduce what are the artificial neurons and how do we aggregate them to make neural-networks. After we've seen this, we will see how to train these networks: what is a cost and how do we reduce the error made by these networks.
 
+	It might be a good moment to mention that we wrote this section following the electronic book of Michael Nielsen. You'll find this book on-line at the following web page: \url{http://neuralnetworksanddeeplearning.com/}
 
-	\subsection{Artificial neuron and Perceptron}
+
+	\section{Artificial neuron and Perceptron}
 	\label{sec:Artificial_neurons}
 		First, the neurons. The first neuron we mention here is the \textbf{Perceptron}. It was described by Rosenblatt in 1958 \cite{rosenblatt1958perceptron} and was one of the first artificial neuron introduced in the literature. This neuron takes as an input multiple binary values to which it apply weights. Once multiplied, these \textit{weighted inputs} are summed-up. If the sum is lower than zero, the neuron outputs zero. Otherwise, the neuron outputs one. A schema of an artificial neuron is given on \Fref{fig:perceptron}.
 
@@ -57,7 +59,7 @@
 		\end{itemize}
 
 
-	\subsection{Neural-network}
+	\section{Neural-network}
 		Now that we have neurons, we need a network of them to compose an architecture similar to the brain. The networks we are going to work with are called \textbf{feed-forward} neural-networks. They are the most common ones in the literature. \Fref{fig:feed_forward} is a representation of a two-hidden-layer feed-forward neural-network. As you can see, this model consist of groups of neurons. We denote as layer the group of neurons belonging to the same deepness in the model. Therefore, all the neurons visible on the left in our model, compose the first layer of neurons. It's the input layer. The following layers are called the hidden layers and the last one is the output layer. Some variations exists of this definition, for instance, some outputs of the model might be placed at the same level as some hidden layer.
 
 		Our simple example is also a feed-forward neural-network. It has an input layer fully connected to a hidden layer, which is also fully connected to the output layer. As drawn on the schema with the directions of the arrows, the signal propagates from left to right, from the inputs to the outputs. Because of these two reasons (layers fully connected and single direction signal propagation) our simple example is a feed-forward neural-network.		
@@ -118,7 +120,7 @@
 		\textbf{Symmetrically connected} networks is an other types of network, they are called the "Boltzmann machines". They are symmetrical in the sense that connections between neurons exists in the two directions and the weight on this connections is the same in both directions. Here again, we won't work on these models.
 
 
-	\subsection{Forward-propagation}
+	\section{Forward-propagation}
 	\label{sec:forward_propagation}
 		The logic route now is to relate our neural-network to the prediction or classification task. Lets consider we have a neural-network. This neural-network has weight vectors and biases initialized for each of its neurons. When we input a vector on the left of this neural-network each neurons on the next layer will be assigned a local output value (given the inputs on the previous layer). Following this same pattern from layer to layer, the input signal (vector $\boldsymbol{x}$) will propagate until the output layer resulting in our prediction.
 
@@ -164,7 +166,7 @@
 		\vskip 1cm
 		Lets demonstrate this forward-propagation on our simple example. We will propagate $\boldsymbol{x}^1$, the first input sample of the dataset, and get the prediction made by the network. To do so, we need to initialize the weights and biases of the 6 neurons we have. We use weight initialization written on table\ref{tab:NN_weights}.
 
-		\begin{table}[h]
+		\begin{table}[ht]
 			\centering
 			\begin{tabular}{c|c|c||c|c|c}
 				$\boldsymbol{w}^1_1$ & $\boldsymbol{w}^1_2$ & $\boldsymbol{w}^1_3$ & $\boldsymbol{w}^2_1$ & $\boldsymbol{w}^2_2$ & $\boldsymbol{w}^2_3$ \\
@@ -209,7 +211,7 @@
 		We have here the prediction for $\boldsymbol{x}^1$. To have a percentage out of this prediction we normalize prediction and get that sample $\boldsymbol{x}^1$ could be of class 1 with $98,6\%$ accuracy, could be of class 2 with $.7\%$ or of class 3 with $.7\%$ accuracy. Our simple example, initialized with these weights made an accurate prediction for this sample.
 	
 
-	\subsection{Cost function}
+	\section{Cost function}
 	\label{sec:cost_function}
 		Once we have build our model, we consider a cost function, also called "loss function". This cost function define how good is the model doing, considering an evaluation criterion. In the case of classification, we want to evaluate how good the prediction is doing towards the true output.
 		The most famous cost functions in neural-network classification are the squared error and the cross entropy (also called the "negative log-likelihood"). For a given sample $i$ with prediction $\boldsymbol{p}^i$ and the true output $\boldsymbol{y}^i$, they are defined as follow:
@@ -241,43 +243,58 @@
 		For the rest of the thesis, we'll be using the cross entropy error function. There is no special motivation under this choice. One mustn't believe that this choice is motivated by $.011$ being lower than $.021$. This result comes from the fact that there are two distinct costs. One compares a distance to the true output (the squared error) whereas cross-entropy gives a negative-log-likelihood.
 
 
-	\subsection{Back-propagation}
+	\section{Back-propagation}
 	\label{sec:back_propagation}
 		Until now we've seen how to build a model. We initialized our model with some specific values and propagated an input through this model. The forward-propagation of the signal gave us a prediction that could be compared to the true prediction of the sample thank to a cost function. Given an entire test set, we could use the same cost function to evaluate our model. In this subsection and the following, we investigate on how to modify the model such that it performs better.
 
-		\subsubsection{Intuition}
+		\subsection{Intuition}
 			We want the model to perform better. We can't change the input samples nor their true predictions. The only parameters we can change are in the model. We could add neurons and see how new neurons improve the current model but we don't. What we are going to do is to modify the neurons such that they have a positive impact on the error. For each neurons present on the model, we are going to see how a twist on their weights and biases impacts the error made by the model. To find the good twists we use Back-propagation and to take a step in the direction of this twist we use gradient descent (section \ref{sec:gradient_desent}).
 
-			The name of back-propagation comes as the opposite of forward-propagation. We start from the cost ($C=l(\boldsymbol{P},\boldsymbol{P})$) of the network and see how twisting the weights of the neurons, layer after layers, affects the cost. To be more formal, we search for the direction of the derivative of the cost as a function of the weights and biases of neuron $j$ on layer $i$. To reach this step, we will first consider $\delta^l_i$, the derivative of the cost with respect to the input of neuron $j$ of layer $l$.
+			The name of back-propagation comes as the opposite of forward-propagation. We start from the cost ($C=l(\boldsymbol{P},\boldsymbol{Y})$) of the network and see how twisting the weights of the neurons, layer after layers, affects the cost. To be more formal, we search for the direction of the derivative of the cost as a function of the weights and biases of neuron $j$ on layer $i$. To reach this step, we will first consider $\delta^l_i$, the derivative of the cost with respect to the input of neuron $j$ of layer $l$.
 			$$ \delta^l_j = \frac{\partial C}{\partial z^l_j } $$
-			You might want to watch \fref{fig:neuron_notation} to remind the notation.
+			You might want to watch \fref{fig:neuron_notation} to remind the notation. Also, for notation convenience we'll be using many vector/matrix notations. As a result, we'll use the Hadamard ("$\circ$") and the Kronecker ("$\otimes$") products. The definitions of these two products are reminded in appendix \ref{sec:hadamar_product}.
 
-		\subsubsection{Step-by-step}
+		\subsection{Step-by-step}
 			The \textbf{first} step of back-propagation is to back-propagate the cost $C$ to the last layer $L$.
-			\begin{equation}
-				\begin{split}
-					\boldsymbol{\delta}^L
-					&= \frac{\partial C}{\partial \boldsymbol{z}^L } \\
-					&= \frac{\partial \boldsymbol{a}^L }{\partial \boldsymbol{z}^L } \circ \frac{\partial C}{\partial \boldsymbol{a}^L }
-				\end{split}
-			\end{equation}
+
+			\begin{tabular}{c|c}
+				\parbox{14em}{
+					\begin{equation}
+						\begin{split}
+							\delta^L_i
+							&= \frac{\partial C}{\partial z^L_i } \\
+							&= \frac{\partial a^L_i }{\partial z^L_i } \cdot \frac{\partial C}{\partial a^L_i }
+						\end{split}
+					\end{equation}
+				}
+				& \parbox{14em}{
+					\begin{equation}
+						\begin{split}
+							\boldsymbol{\delta}^L
+							&= \frac{\partial C}{\partial \boldsymbol{z}^L } \\
+							&= \frac{\partial \boldsymbol{a}^L }{\partial \boldsymbol{z}^L } \circ \frac{\partial C}{\partial \boldsymbol{a}^L }
+						\end{split}
+					\end{equation}
+				}
+			\end{tabular}
+
 			On this last equation, we see that deriving the cost with respect to the neurons' inputs of the last layer $L$ consist on deriving the cost $C$ with respect to the prediction $p$ and on deriving the output of a neuron with respect to it's inputs. 
 
-			The \textbf{second} step is to back-propagate the cost to the other layers $l$. We will, more than ever here, take advantage of the chain rule.
+			The \textbf{second} step is to back-propagate the cost to the other layers $l$. We will here take advantage of the chain rule. 
 			\begin{equation}
 				\begin{split}
 					\boldsymbol{\delta}^l
-					&= \frac{\partial C}{\partial \boldsymbol{z}^l } \\
-					&=	\frac{\partial \boldsymbol{a}^l }{\partial \boldsymbol{z}^l }  					\circ\frac{\partial \boldsymbol{z}^{l+1} }{\partial \boldsymbol{a}^l } \cdot
-					\frac{\partial \boldsymbol{a}^{l+1} }{\partial \boldsymbol{z}^{l+1} }  				\circ\frac{\partial \boldsymbol{z}^{l+2}}{\partial \boldsymbol{a}^{l+1} }  (...)
-					\frac{\partial \boldsymbol{a}^L }{\partial \boldsymbol{z}^L } 		 				\circ\frac{\partial C}{\partial \boldsymbol{a}^L } \\
-					&=  \frac{\partial \boldsymbol{a}^l }{\partial \boldsymbol{z}^l }  					\circ\frac{\partial \boldsymbol{z}^{l+1} }{\partial \boldsymbol{a}^l }  \cdot
+					&=  \frac{\partial C}{\partial \boldsymbol{z}^l } \\
+					&=	\left(\frac{\partial \boldsymbol{a}^l }{\partial \boldsymbol{z}^l }  					\circ\frac{\partial \boldsymbol{z}^{l+1} }{\partial \boldsymbol{a}^l } \right) 	\cdot
+					\left(\frac{\partial \boldsymbol{a}^{l+1} }{\partial \boldsymbol{z}^{l+1} }  		\circ\frac{\partial \boldsymbol{z}^{l+2}}{\partial \boldsymbol{a}^{l+1} }\right)  (...)
+					\left(\frac{\partial \boldsymbol{a}^L }{\partial \boldsymbol{z}^L } 		 		\circ\frac{\partial C}{\partial \boldsymbol{a}^L }\right) \\
+					&=  \left(\frac{\partial \boldsymbol{a}^l }{\partial \boldsymbol{z}^l }  					\circ\frac{\partial \boldsymbol{z}^{l+1} }{\partial \boldsymbol{a}^l }  \right) \cdot
 						\left( \frac{\partial \boldsymbol{a}^{l+1} }{\partial \boldsymbol{z}^{l+1} }  	\circ\frac{\partial \boldsymbol{z}^{l+2}}{\partial \boldsymbol{a}^{l+1} }\right) (...)
 						\left( \frac{\partial \boldsymbol{a}^L }{\partial \boldsymbol{z}^L }			\circ\frac{\partial C}{\partial \boldsymbol{a}^L }\right) \\
-					&= 	\frac{\partial \boldsymbol{a}^l }{\partial \boldsymbol{z}^l }   				\circ\frac{\partial \boldsymbol{z}^{l+1} }{\partial \boldsymbol{a}^l } \cdot
+					&= 	\left(\frac{\partial \boldsymbol{a}^l }{\partial \boldsymbol{z}^l }   				\circ\frac{\partial \boldsymbol{z}^{l+1} }{\partial \boldsymbol{a}^l } \right) 		\cdot
 						\left( \frac{\partial \boldsymbol{a}^{l+1} }{\partial \boldsymbol{z}^{l+1} }  	\circ\frac{\partial \boldsymbol{z}^{l+2}}{\partial \boldsymbol{a}^{l+1} }\right) (...) 
 						\boldsymbol{\delta}^{L}\\
-					&= 	\frac{\partial \boldsymbol{a}^l }{\partial \boldsymbol{z}^l }  					\circ\frac{\partial \boldsymbol{z}^{l+1} }{\partial \boldsymbol{a}^l } \cdot
+					&= 	\left(\frac{\partial \boldsymbol{a}^l }{\partial \boldsymbol{z}^l }  					\circ\frac{\partial \boldsymbol{z}^{l+1} }{\partial \boldsymbol{a}^l } \right) 	\cdot
 						\boldsymbol{\delta}^{l+1}
 				\end{split}
 			\end{equation}
@@ -331,10 +348,10 @@
 
 
 
-		\subsubsection{Equations applied to our simple example}
+		\subsection{Equations applied to our simple example}
 			Before applying the back-propagation, we are going to compute some important derivatives. We will differentiate our cross entropy cost $C$ with respect to its inputs and differentiate the sigmoid neurons with respect to their inputs too.
 			\begin{itemize}
-				\item The derivative of the cost $C$ with respect to the predictions $p_j$:
+				\item The \textbf{derivative of the cost} $C$ with respect to the predictions $p_j$:
 					\begin{equation}
 						\begin{split}
 							\frac{\partial C}{\partial a^L_j}
@@ -345,7 +362,7 @@
 						\end{split}
 					\label{eq:cost_over_pred}
 					\end{equation}
-				\item The derivative of a neuron's output $a^l_j$ with respect to its inputs $z^l_j$ (or $\boldsymbol{a}^l$ wrt. $\boldsymbol{z}^l$).
+				\item The \textbf{derivative of a neuron}'s output $a^l_j$ with respect to its inputs $z^l_j$ (or $\boldsymbol{a}^l$ wrt. $\boldsymbol{z}^l$).
 					\vskip 1em
 					\begin{tabular}{c|c}
 						\parbox{14em}{
@@ -366,7 +383,7 @@
 							\end{equation}
 						}
 					\end{tabular}
-				\item In the cost description (section \ref{sec:cost_function}), we mention a normalized input $\widetilde{\boldsymbol{p}}$ but didn't emphasize on it. This normalized input impacts the last layer of the network such that the derivatives of this layer are different than simple sigmoid neurons. That kind of layer is called a softmax layer. Appendix \ref{sec:softmax_layer} further explain this layer but here are the derivatives of the softmax neurons:
+				\item \textbf{Derivative of the softmax neurons}: In the cost description (section \ref{sec:cost_function}), we mention a normalized input $\widetilde{\boldsymbol{p}}$ but didn't emphasize on it. This normalized input impacts the last layer of the network such that the derivatives of this layer are different than simple sigmoid neurons. That kind of layer is called a softmax layer and is often used when neural-networks when dealing with multi-class tasks. You'll find more information on this function on the "Pattern recognition and machine learning" book \cite{bishop2006pattern} starting on page 113. Right bellow we derive the outputs of these softmax neurons with their aggregated inputs. There is two cases to derive: the first one is when we differentiate the neuron $a^L_k$ that correspond to the true output $y_k=1$. The second is when we derive the other neurons $a^L_j$ that doesn't correspond to the true output $y_j=0$.
 				\begin{itemize}
 					\item If $p_k$ corresponds to $y_k=1$
 						\begin{equation}
@@ -389,9 +406,11 @@
 				\end{itemize}
 			\end{itemize}
 
-			We've seen the result of some derivatives of some functions present in our simple example. These derivatives will help us in applying the back-propagation algorithm. As mentions on the previous section, there is three main steps to take. \textbf{First} differentiate the cost $C$ with respect to the inputs of the last layer. In our case we differentiate the cross entropy function with respect to the inputs of normalized-output-neurons. In other words we derive the cost function with respect to the inputs of the softmax neurons (appendix \ref{sec:softmax_layer}). The \textbf{second} step consist on back-propagating the error layer by layer such that we get the derivative of the cost with respect to the inputs of layer $l$. \textbf{Third}, and last step, is to compute the derivatives at the weights and biases level instead of just the 'input' of the neurons as we've been doing so far.
+			\vskip 1cm
+			\textbf{Back-propagate:}\\
+			We've seen the result of some derivatives of some functions present in our simple example. These derivatives will help us in applying the back-propagation algorithm. As mentions on the previous section, there is three main steps to take. \textbf{First} differentiate the cost $C$ with respect to the inputs of the last layer. In our case we differentiate the cross entropy function with respect to the inputs of normalized-output-neurons. In other words we derive the cost function with respect to the inputs of the softmax neurons. The \textbf{second} step consist on back-propagating the error layer by layer such that we get the derivative of the cost with respect to the inputs of layer $l$. \textbf{Third}, and last step, is to compute the derivatives at the weights and biases level instead of just the 'input' of the neurons as we've been doing so far.
 			\begin{enumerate}
-				\item To compute the derivative of the cost with respect to the inputs of the last layer we use the results of equations \ref{eq:cost_over_pred}, \ref{eq:softmax_deriv_1} and \ref{eq:softmax_deriv_2}. This is also further explained on appendix \ref{sec:softmax_layer}.
+				\item To compute the \textbf{derivative of the cost} with respect to the inputs of the \textbf{softmax layer} we use the results of equations \ref{eq:cost_over_pred}, \ref{eq:softmax_deriv_1} and \ref{eq:softmax_deriv_2}.
 					\begin{equation}
 						\begin{split}
 							\delta^L_j
@@ -407,7 +426,7 @@
 						\end{split}
 					\end{equation}
 					Which in a vector notation is $\boldsymbol{\delta}^L = \boldsymbol{p} - \boldsymbol{y}$
-				\item Then we back-propagate to other layers. We only have two layers, we've just done the last layer $l=2$. We now do layer $l=1$
+				\item Then we \textbf{back-propagate} to other layers. We only have two layers, we've just done the last layer $l=2$. We now do layer $l=1$
 					\begin{equation}
 						\begin{split}
 							\boldsymbol{\delta}^{1}
@@ -419,7 +438,7 @@
 							&= \boldsymbol{a}^1 \circ(1-\boldsymbol{a}^1) \circ ({\boldsymbol{W}^2}^T \cdot \boldsymbol{\delta}^2) \\
 						\end{split}
 					\end{equation}
-				\item Finally, we compute the derivative with respect to the weights and biases.
+				\item Finally, we compute the \textbf{derivative of the costs} with respect to the \textbf{weights and biases}.\\
 				\begin{tabular}{c|c}
 					\parbox{14em}{
 						\begin{equation}
@@ -465,7 +484,7 @@
 
 
 
-	\subsection{Gradient descent}
+	\section{Gradient descent}
 	\label{sec:gradient_desent}
 		With back-propagation, we've computed the derivatives of the cost with respect to the weights and biases of the model. In other words, we've seen how to twist the neurons' parameters such that, given an input sample, they lower the cost.
 
@@ -479,7 +498,7 @@
 		On deep learning, we don't use gradient descent but \textbf{Stochastic Gradient Descent (SGD)}. This descent algorithm picks a sample at random on the dataset and evaluate the gradient from it. Still, ”The derivative based on a randomly chosen single example is a random approximation to the true derivative based on all the training data” \cite{elkan2013maximum}.
 
 
-		\subsubsection{Example on our simple example}
+		\subsection{Example on our simple example}
 			We want to perform a step towards a lower cost on our simple example using SGD. We'll pick 'at random' the 1st sample on the training set:
 			$$ \boldsymbol{x}^1 = \left( \begin{matrix} 0  \\ 0  \\ 1  \end{matrix}\right) $$
 			That is of class $y^1 = 1$. The model we consider is initialized as before. It has the weight and biases of \fref{tab:NN_weights}.

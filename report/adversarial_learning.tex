@@ -1,16 +1,16 @@
 
 
 
-\section{Adversarial learning}
+\chapter{Adversarial learning}
 \label{sec:adversarial_learning}
 
 	This section is the main contribution of the thesis. We'll see how how an idea of adversarial learning can be applied on a shallow-neural-network. This Idea was first developed by Ian J. Goodfellow, Jonathon Shlens and Christian Szegedy. They proposed an adversarial training on a shallow-feed-forward-neural-network. Along the paper\cite{goodfellow2014explaining}, they emphasize the be benefits of this method applied to a training on the MNIST dataset\cite{lecun-mnist}. Thanks to their adversarial learning, they obtained a better accuracy on the test set.
 
 
 	
-	\subsection{Intuition}
+	\section{Intuition}
 	\label{sub:intuition}
-		With adversarial learning, we train our classifier to resit to samples that could confuse it. On the paper mentioned above\cite{goodfellow2014explaining}, the authors noticed that some adversarial modifications could be made up to fool drastically the classifier. If you were allowed to twist the pixels' values by $.7\%$, and chose carefully these values, you could mislead your classifier from a $95\%$ accuracy to a low $.7\%$. The twist they proposed was adversarial in the sense that they elected a twist given the current classifier. In other words, it's by knowing the intra-sec properties and weights of the model that they created the adversarial twists. These twists are computed with some math and will be detailed on section \ref{sec:creating_the_adversarial_samples}.
+		With adversarial learning, we train our classifier to resit to samples that could confuse it. On the paper mentioned above\cite{goodfellow2014explaining}, the authors noticed that some adversarial modifications could be made up to fool drastically the classifier. If you were allowed to twist the pixels' values by $.7\%$, and chose carefully these values, you could mislead your classifier from a $95\%$ accuracy to a low $.7\%$. The twist they proposed was adversarial in the sense that they elected a twist given the current classifier. In other words, it's by having full knowledge of the model's neurons and neurons' weights that they created the adversarial twists. These twists are computed with some math and will be detailed on section \ref{sec:creating_the_adversarial_samples}.
 
 		To take advantage of this observation, we will train our model, not on the casual dataset, but on an adversarial version of it. To be more concrete: instead of forward-propagating the input sample through the model and get the prediction out of it, we will twist the input sample and forward-propagate it. The cost will get is the one of the adversarial samples and not of the original dataset.
 
@@ -18,7 +18,7 @@
 
 		
 
-	\subsection{Creating the adversarial samples}
+	\section{Creating the adversarial samples}
 	\label{sec:creating_the_adversarial_samples}
 		The adversarial samples will be created from the original samples. We'll allow ourself to modify the pixels by some values. For instance, for an image, if pixels are coded with values between $0$ and $255$ ($0$ being black and $255$ white) we will allow ourselves to modify the pixels values by $\epsilon_{\text{adv}} \times 255$ so that the image looks the same. The modifications will be based on our feed-forward models weights biases and cost function. Concretely, the adversarial modifications will be equal to:
 		$$ \eta = \epsilon_{\text{adv}} \times \text{sign}(\nabla_x \text{Cost}(\boldsymbol{W},\boldsymbol{x},\boldsymbol{y})) $$
@@ -27,9 +27,9 @@
 		To create an adversarial sample we compute the derivative of the model 
 
 
-	\subsection{Adversarial sample on our simple example}
+	\section{Adversarial sample on our simple example}
 	\label{sub:adversarial_sample_on_the_simple_example}
-		Lets now build an example of adversarial sample. As always, we'll use the simple example we've build up (visible on section \ref{sec:weight_initialisation_on_simple_example}) and the sample $x^1$. From those two elements, we'll build-up the adversarial sample corresponding to it.
+		Lets now build an example of adversarial sample. As always, we'll use the simple example we've build up (visible on section \ref{sec:weight_initialisation_on_simple_example}) and the sample $\boldsymbol{x}^1$. From those two elements, we'll build-up the adversarial sample corresponding to it.
 
 		We aim at deriving the cost of the model with respect to the inputs $x$. Luckily, we are able to re-use the back-propagation algorithm to compute the derivation. With the notation of section \ref{sec:back_propagation}, we have:
 		\begin{equation}
@@ -54,6 +54,7 @@
 
 		At this point, we know how to compute the compute an adversarial sample. From the last equation, it doesn't clearly appears that an adversarial sample depends on the variables of the model. Taking a closer look into it, we have that an adversarial sample depends on all the variables present on the model. The neurons' weights appears twice. First on the the back-propagation and then on the forward-propagation (the cost) and the biases appears once on the forward-propagation. We also have that the sample class is present on the cost. Therefore, the adversarial sample needs an entire knowledge on the model and on the samples.
 
+		\vskip 1cm
 		Lets apply this to sample $\boldsymbol{x}^1$ with $\epsilon_{\text{adv}} = .07$:
 		\begin{equation}
 			\begin{split}
@@ -72,19 +73,21 @@
 			\end{split}
 		\end{equation}
 
-		From this example we can see the adversarial twist put noise in a direction to confuse the model ?? why not decrease of $-.03$ augmented la loss for this given that.
+		From this example we can see the adversarial twist added noise in a direction to confuse the model. This augmented the error made by the model: it went from a loss of $.013501$ to a loss of $.013580$ on the adversarial sample.
 		With this example, the benefits of adversarial learning are not clearly visible but we hope that the process underlining adversarial learning is understood.
 
 
 
-	\subsection{MNIST}
+	\section{MNIST}
 	\label{sub:MNIST}
 		
-		The first dataset we're going to evaluate is the MNIST dataset\cite{lecun-mnist}. This dataset is composed by 70k images representing digits going from 0 to 9. Each of the images has $28*28$ black and white pixels. For each pixels is given a value in between 0 and 1 stating how bright is the pixel. The task, given this dataset, is to classify the samples into the 10 classes they belong in. For our needs, we discomposed the dataset into 3 sets: a training-set composed by 50k samples, a validation-set composed by 10k samples and a testing-set composed by 10k samples. 
+		The first dataset we're going to evaluate is the MNIST dataset\cite{lecun-mnist}. This dataset is composed by 70k images representing digits going from 0 to 9. Each of the images has $28*28$ gray scaled pixels. For each pixels is given a value in between 0 and 1 stating how bright is the pixel. The task, given this dataset, is to classify the samples into the 10 classes they belong in. For our needs, we discomposed the dataset into 3 sets: a training-set composed by 50k samples, a validation-set composed by 10k samples and a testing-set composed by 10k samples. 
 
 		From our observations, this dataset is similar to a baseline in machine learning for testing algorithms in image processing. The reason is that it has been around for a long time and that it's big and small enough to quickly and accurately test new ideas related to this domain. It's for this reason that we'll make most of our tests using this dataset.
 
 		Lets now get to adversarial learning. On their paper\cite{goodfellow2014explaining}, the authors used adversarial-learning in conjunction with other techniques. In order separate adversarial-learning from any anther technique, we've decided to re-implement the shallow-neural-network without any method that could be assimilated as a regularization. Concretely, the authors of the paper used two methods that function together called maxout and dropout. Dropout is considered to regularize the network. For this reason we removed it such that our net is only composed by the pixels inputs, the hidden ReLU layer and the softmax output layer. \Fref{fig:mnist_net} is a graphical representation of the MNIST net we used.
+
+		On the following subsections, we are performing some experiments to confirm the benefits of adversarial learning. We'll see the impact of the amount of neurons on the networks, the impact of modifying the adversarial epsilon and compare the adversarial-model with other ones.
 
 		\begin{figure}
 			\centering
@@ -136,7 +139,7 @@
 			\label{fig:mnist_net}
 		\end{figure}
 
-		\subsubsection{Playing with neuron quantities}
+		\subsection{Playing with neuron quantities}
 		\label{ssub:playing_with_neuron_quantities}
 			One of the first experiment we got interested in knowing which parameters should be used to train the neural network. We would expect that the size of the hidden layer has a direct impact on the predictions and on the accuracy of the model. We would therefore try different layer sizes and see which ones were over and under fitting. We also want to know if one of the adversarial or usual training would under or over-fit before the other given the same amount of neurons. If one were to under-fit longer than the other, it would imply it need to learn more functions than the other model to be accurate.
 
@@ -153,16 +156,16 @@
 				\caption{Comparing the amount of neurons' impact on non-adversarial and adversarial models. Every pair represent a non-adversarial-learning and an adversarial-learning trained with a certain amount of hidden neurons.}
 				\label{fig:mnist_neurons}
 			\end{figure}
-			
+
+			\vskip 1cm
+			\textbf{Analysis:}\\
 			Looking at this graph (\fref{fig:mnist_neurons}), the first thing we notice is that adversarial-learning performs worse than non-adversarial-learning for models with less than a hundred neurons. When we deal with 5 hidden neurons, adversarial model is 17 percent points less accurate than the non-adversarial model. With this observation we can hypothesize that adversarial model can't properly synthesize what it sees with so few functions (neurons). Therefore it introduces more inaccuracy in the functions it learns.
 
-			What we find more relevant is the following: the adversarial-learning plateaus at 400 neurons whereas non-adversarial-learning plateau in between 50 and 100 neurons. In other words, adversarial-learning need far more neurons (far more functions) to reach its best accuracy. From this observation, and from the insight of the universal approximator \cite{hornik1989multilayer}, we can say that adversarial-learning learns more functions than the other model does. Which is to say that the adversarial-learning method is not about having the same kind of model but one being more accurate than the other. It's about having a new model learning far more  functions. 
-
-			Also, as the adversarial-learning models converges slower than the other model, I would say that adversarial-learning learns a whole set of new functions. If it were not the case, We would expect the adversarial models to be at least as good as the non-adversarial.
+			What we find more relevant is the following: the adversarial-learning plateaus at 400 neurons whereas non-adversarial-learning plateau in between 50 and 100 neurons. In other words, adversarial-learning need far more neurons (far more functions) to reach its best accuracy. From this observation, and from the insight of the universal approximator \cite{hornik1989multilayer}, we can say that adversarial-learning learns more functions than the other model does. Which is to say that the adversarial-learning method is not about having the same kind of model but one being more accurate than the other. It's about having a new model learning far more  functions. Also, as the adversarial-learning models converges slower than the other model, I would say that adversarial-learning learns a whole set of new functions. If it were not the case, We would expect the adversarial models to be at least as good as the non-adversarial.
 
 
 
-		\subsubsection{Playing with adversarial epsilon}
+		\subsection{Playing with adversarial epsilon}
 		\label{ssub:playing_with_adversarial_epsilon}
 			The Adversarial learning we use relies on an epsilon, the one we've noted $\epsilon_{\text{adv}}$:
 			$$ \boldsymbol{x} + \epsilon_{\text{adv}} \times \text{sign}(\nabla_{\boldsymbol{x}} C) $$
@@ -175,14 +178,18 @@
 				\label{fig:mnist_adv_eps}
 			\end{figure}
 			
+			\vskip 1cm
+			\textbf{Analysis:}\\
 			\Fref{fig:mnist_adv_eps} seems to reveal that a good adversarial epsilon for this dataset and given a model of 800 neurons is located between $.05$ and $.3$. On the figure we plotted, the optimum value for the adversarial epsilon seems to be $.1$. On this same plot, we can see that the confidence for the predictions falls down as the adversarial epsilon raises. We don't know what these two informations teaches us towards adversarial-learning but that low epsilon value seems to perform better on both accuracy and confidence.
 
 
-		\subsubsection{Compare to noisy dataset} 
+		\subsection{Compare to noisy dataset} 
 		\label{ssub:compare_to_noisy_dataset}
 			One of the objective mentioned for adversarial-learning was to diminish the linearity of the network: The authors of \cite{goodfellow2014explaining} said that usual networks were not able to understand the underlining nature of a class because it was too much dependent on the underlining distribution of the data present on the dataset. This dependency was described with too much linearity on the network to learn the underlining dataset. It's because of this over-linearity that adversarial samples were so good at fooling the models.
 
-			On this subsection, we want to see if, effectively, the model is better at generalizing. To do this, we are going to compare a non-adversarial model (A) with an adversarial model (B) on a modified test-set. We are going to modify the original test-set by twisting each pixels by a random value. With this technique we'll produce few test-sets and test every of them on model A and B. The random value mentioned right before comes from a normal distribution with a given standard deviation. It's these deviations that is going to change from $0$ to $.3$ to produce the different test-sets.
+			On this subsection, we want to see if, effectively, the model is better at generalizing. To do this, we are going to compare a non-adversarial model (A) with an adversarial model (B) on modified test-sets. The first one will compare A and B on the adversarial test-set and will most probably confirm the hypothesis seen above.The second one is going to compare A and B on an other modified version of the test-set. Here we'll by twisting each pixels by a random value. This random value comes from a standard normal distribution (with a mean of 0 and variance of 1). To produce this set we compute :
+			$$ \tilde{\boldsymbol{x}}^i = \boldsymbol{x}^i + \epsilon_{\text{ads}} \text{noise} $$
+			Where noise is randomly generated following a standard normal distribution.
 			
 			\begin{figure}
 				\centering
@@ -193,68 +200,158 @@
 			\end{figure}
 			\begin{figure}
 				\centering
-				\includegraphics[width=0.4\textwidth]{/home/marc/git/MI10_adversarial_training/training_test/MLP3/mem/bar_testset_impact_norm.png}
-				\caption{Extract of the test-set with the same image with different standard deviations. From left to right: $\rho = [.0, .1, .2, .3]$}
+				\includegraphics[width=0.7\textwidth]{/home/marc/git/MI10_adversarial_training/training_test/MLP3/mem/bar_noisy_ts_adv.png}
+				\includegraphics[width=0.7\textwidth]{/home/marc/git/MI10_adversarial_training/training_test/MLP3/mem/bar_noisy_ts_norm.png}
+				\caption{Extract of the test-set with the same image with different noises. On the top, you see the adversarial noised sample with $\epsilon_{\text{ads}} = [.0, .1, .2, .3]$. On the bottom you see the uniform noised sample with, from left to right the standard deviation taking values: $\epsilon_{\text{noise}} = [.0, .1, .2, .3]$}
 				\label{fig:mnist_adv_noisy_ds_img}
 			\end{figure}
 
+			\vskip 1cm
+			\textbf{Analysis:}\\
+			With the left plot of \fref{fig:mnist_adv_noisy_ds}, we confirm that adversarial samples easily fools a usual feed-forward model. Twisting the pixels by $10\%$ in the direction of the worst case (our adversarial case),drastically confuses the original model. Now, trying to fool the adversarial-model with this same technique doesn't work as good. The adversarial-model can't be fooled as easily. 
 
-			With the left plot of \fref{fig:mnist_adv_noisy_ds}, we confirm that adversarial-learning easily fools a usual feed-forward model. Twisting the pixels by $10\%$ in the direction of the worst case (our adversarial case),drastically confuse the original model. Now, trying to full the adversarial-model with this same technique doesn't work as good. The adversarial-model can't be fooled as easily. 
+			With the plot on the right, we compare the accuracy of both the models on another twisted dataset. This time, the adversarial-model keeps an advantage until the dataset becomes too noisy $\epsilon_{\text{noise}}=.22$. This result is a bit contradictory with our expectations. In fact, we would have expected that adding noise to this test-set would have fooled more the non-adversarial model than the adversarial one. The reason being that adversarial-learning was supposed to better generalize the underlining distribution of the test-set and therefore be less dependent on noise.
 
-			With the plot on the right, we compare the accuracy of both the models on another twisted dataset. This time, the adversarial-model keeps an advantage until the dataset becomes too noisy $\rho=.22$. This result is a bit contradictory with our expectations. In fact, we would have expected that adding noise to this test-set would have fooled more the non-adversarial model than the adversarial one. The reason being that adversarial-learning was supposed to better generalize the underlining distribution of the test-set and therefore be less dependent on noise.
-
-			Despite this, the adversarial-model still outperforms the other one on this modified test-set before the test-set gets really noisy ($\rho>.22$ )
+			Despite this, the adversarial-model still outperforms the other one on this modified test-set before the test-set gets really noisy ($\epsilon_{\text{noise}}>.22$ )
 
 
 
-		\subsubsection{Train with noisy dataset}
+		\subsection{Train with noisy dataset}
 		\label{ssub:train_with_noisy_dataset}
-			Here we want to see how is adversarial-learning doing compared to another idea. Right before we mentioned the motivation for adversarial-learning (too much dependence on underlining distribution). Adversarial-learning came as an idea to be less dependent on this underlining distribution. On this section, we are going to introduce noise on the learning dataset 
-			Here we try another learning technique to compare with adversarial-learning. As a recall, adversarial-learning modified the input samples towards a worst case prediction given the model. Now, instead of modifying the input sample by this worst case sample, we'll modify the sample by a random noise. The random noise added to the learning dataset will be under a normal distribution with a standard deviation of $.25$. We don't necessary expect this learning to be better at classifying but we hope that it can better resist to adversarial samples. If it does, it could support that usual training is too much linear.
+			So far we've been comparing an usual model to the non-adversarial model. Here, we introduce a new model originating from the previous experience. As a matter of fact, we stated that model A (the usual model) was too much linear. We introduced model B (adversarial-model) as being less dependent on the underlining distribution. Then we tested the models on a noisy test-sets. Now we want to compare B with a new model that is also less dependent on the underlining distribution. Therefore we introduce a model C (also having 800 hidden neurons) that is trained on noisy dataset. This dataset is also computed live. At every iterations of the back-propagation a new test-set is generated (as for the adversarial-model (B)). This live modification of the test set permits the classifier not to over-fit an original noise given to the network. It must learn that noise can appear. The input sample modification is the same a before: 
+			$$ \tilde{\boldsymbol{x}}^i = \boldsymbol{x}^i + \epsilon_{\text{ads}} \text{noise} $$
+			Where noise is randomly generated following a standard normal distribution.
+
+			As a recall, adversarial-learning modified the input samples towards a worst case prediction given the model. Now, instead of modifying the input sample towards this worst case sample, we twist the sample by adding a random noise. At this point, we don't necessary expect this learning to be better at classifying but we hope that it can better resist to adversarial samples. If it does, it could support that usual training is too much linear.
 
 			\begin{figure}
 				\centering
 				\includegraphics[width=0.4\textwidth]{/home/marc/git/MI10_adversarial_training/training_test/MLP3/mem/bar_testset_impact_2_adv.png}
 				\includegraphics[width=0.4\textwidth]{/home/marc/git/MI10_adversarial_training/training_test/MLP3/mem/bar_testset_impact_2_norm.png}
-				\caption{Evaluate casual, adversarial and noisy models of 800 hidden neurons on noisy test-sets and adversarial datasets.}
-				\label{fig:mnist_neurons}
+				\caption{Evaluate normal-distribution-based model versus the casual and adversarial models of 800 hidden neurons on noisy test-sets and adversarial datasets.}
+				\label{fig:mnist_noisy_learn}
 			\end{figure}
 
-			
-		\subsubsection{Visualizing weights}
-		\label{ssub:visualizing_weights}
-			We've also tried to compare the weights of each of the 
-		
+			\vskip 1cm
+			\textbf{Analysis:}\\
+			With the left plot of \fref{fig:mnist_noisy_learn} we can make two observations. The first one was unexpected and is that model C (new one) performs as good as model B (adversarial model) on the original dataset. They both score close to $98.7\%$ accuracy on the original test-set. The second observation, more interesting to us, reveals that model C is more resistant to adversarial samples than model A. This observation come in favor of A being too linear and relying too much on the original distribution of the samples. Why so ? The objective in training the dataset with model C, was to enforce the classifier to learn that each of the pixels of a class followed a normal distribution. We enforce the model to consider an alternative data distribution than the one present on the original training-set. If C would have performed as bad as A on the adversarial test-set, it could have meant that model A, actually, generalizes and is not as linear as we ought to say.
+			With the plot on the right, we have that model C outperforms models A and B. This observation is legitimate with the experiment we've build up. We trained model C on believing that the pixels were under a normal distribution and then tested the model on a test-set enforcing this normal distribution modification. Once again, we are a bit disappointed here that adversarial-learning can't best predict this noisy dataset.
 
+			
+		\subsection{Visualizing weights}
+		\label{ssub:visualizing_weights}
+			We thought it could be nice to visualize what had been learned by the network. We've therefore tried to visualize the weights to find out the patterns it relies on. The \textbf{first} idea that came to our mind was to "back-propagate" the output-neurons' weights connected to the inputs. As a result, we would have visualized a pattern of what was understood as a 1, a 2 or any class of the task. Mathematically we just needed to compute:
+			$$ W_{\text{visualize}} = \boldsymbol{W^1} \cdot \boldsymbol{W}^2 $$
+			And each of the columns of $W_{\text{visualize}}$ would have represented the patterns learned from a class. On \fref{fig:mnist_weight_class}, you see these weights for classes 0 to 4 of MNIST. The upper-row are casual-learning and the lower-row is adversarial-learning. On both neither of these images we can distinguish the patterns of a one, a two or any other digit.
+			\begin{figure}
+				\centering
+				\includegraphics[width=0.4\textwidth]{/home/marc/git/MI10_adversarial_training/training_test/MLP3/mem/bar_weight_class_800.png}
+				\includegraphics[width=0.4\textwidth]{/home/marc/git/MI10_adversarial_training/training_test/MLP3/mem/bar_weight_class_2000.png}
+				\caption{Attempt at visualizing classes pattern on casual-model (top) and adversarial-model (bottom) of 800 neurons (left) and 2000 neurons (right).}
+				\label{fig:mnist_weight_class}
+			\end{figure}
+			\begin{figure}
+				\centering
+				\includegraphics[width=0.3\textwidth]{/home/marc/git/MI10_adversarial_training/training_test/MLP3/mem/bar_weight2_100.png}
+				\includegraphics[width=0.3\textwidth]{/home/marc/git/MI10_adversarial_training/training_test/MLP3/mem/bar_weight2_800.png}
+				\includegraphics[width=0.3\textwidth]{/home/marc/git/MI10_adversarial_training/training_test/MLP3/mem/bar_weight2_2000.png}
+				\caption{Attempt at visualizing neuron patterns on casual-model (top) and adversarial-model (bottom) of 100 neurons (left), 800 neurons (center) and 2000 neurons (right).}
+				\label{fig:mnist_weight}
+			\end{figure}
+
+			The \textbf{second} way we tried to visualize the patterns was at the first (and only) hidden-layer we have. We've plotted some of the neuron's weight but none gave gave us more insight on what was seeing model A and model B. After watching \fref{fig:mnist_weight}, the only comparison we could make was that the adversarial-model seems to have more grain on its neurons compared to the casual-model.
+
+			After these two failures in visualizing the patterns we expected to have, we've browsed the find and found that this types of networks were not supposed to contain some neurons with the patterns we were looking for. Instead, another model called Restricted Boltzmann Machines (RBM) would have these properties (where you can see patterns learned by neurons).
+
+		\subsection{MNIST summary}
+		\label{ssub:mnist_summary}
+			With the MNIST dataset we've seen many things. 
+			\begin{itemize}
+				\item Playing with the hidden neurons quantities we've seen that adversarial-model (B) learned more functions than the usual-model (A) did.
+				\item Playing with the adversarial epsilon we've seen which epsilons seemed to perform better.
+				\item Comparing models A and B with noisy datasets confirmed that A was sensible to adversarial samples when B was not.
+				\item Training a new model (C) on a noisy dataset probably confirmed that A was too linear.
+				\item Visualizing weights didn't worked as expected but played a role in knowing what future work could be made of.
+			\end{itemize}
+		
+	
+	\section{CIFAR-10}
+	\label{sub:cifar_10}
+		Another dataset we've used is the CIFAR-10 database. CIFAR-10 is a dataset composed by 60k images. An image is about one of the following 10 classes: \textit{an airplane, an automobile, a bird, a cat, a deer, a dog, a frog, a horse, a ship or a truck}. Each images is composed by $32*32$ RGB pixels which makes an input vector composed by $3072$ values. As for the MNIST dataset, we discomposed the dataset into 3 sets: a training-set composed by 40k samples, a validation-set composed by 10k samples and a testing-set composed by 10k samples. \Fref{fig:cifar} is an extract of the dataset.
+
+		\begin{figure}
+			\centering
+			\includegraphics[width=0.8\textwidth]{/home/marc/git/MI10_adversarial_training/training_test/MLP3/mem/bar_orig_CIFAR.png}
+			\caption{Extract of Cifar10 dataset.}
+			\label{fig:cifar}
+		\end{figure}
+
+
+		Right below, we are going to see how adversarial-learning did with CIFAR-10.
+
+
+		\subsection{Training CIFAR-10} % (fold)
+		\label{ssub:training_cifar_10}
+			We've build a model to learn CIFAR-10. At the beginning, we trained a model with 3072 inputs, 2500 hidden neurons and 10 outputs. Training this dataset took a huge amount of time (we didn't reached the end). Therefore, we decided to shrink the input vector. To do so, we gray-scaled the input sample. In other words, we changed the RGB pixel to gray pixels. This modification shrank our input by 3 times less inputs values (1024 instead of 3072). Even shrinking the input vector, learning the dataset took 3 days on our computer. Because of this reason, we were not able to perform all the test we performed on MNIST.
+
+			As we did for MNIST, we are going to compare basic model (Ac) and adversarial-model (Bc) to noisy datasets. As before, we'll have an adversarial dataset and a dataset with random noise. Before rnedering the graph, we expect to have the same kind of results. We expect the adversarial samples to fool Ac but not Bc. We expect Bc to be more accurate that Ac is and, maybe we'll have this time Bc performing better than Ac on the random noise test-set. \Fref{fig:cifar_noisy_test} are the resulting plots applied for CIFAR-10.
+
+			\begin{figure}
+				\centering
+				\includegraphics[width=0.4\textwidth]{/home/marc/git/MI10_adversarial_training/training_test/MLP3/mem/bar_testset_impact_adv_CIFAR.png}
+				\includegraphics[width=0.4\textwidth]{/home/marc/git/MI10_adversarial_training/training_test/MLP3/mem/bar_testset_impact_norm_CIFAR.png}
+				\caption{Evaluate non-adversarial (dashed line) and adversarial models (plain line) of 2500 hidden neurons on modified test-sets. On the left, we try the two models on an adversarial test-dataset. The horizontal axis represents the epsilon values used to modified the test-set. On the right, we try the two models on an normal-distribution-modified test-dataset with different standard deviations.}
+				\label{fig:cifar_noisy_test}
+			\end{figure}
+
+			\vskip 1cm
+			\textbf{Analysis:}\\
+			Looking at the results, we have that Bc outperforms Ac on the original test-set. This observation comes in favor of adversarial-learning being less linear that Ac is. This result is very similar to the one we had with MNIST on section \ref{ssub:compare_to_noisy_dataset}. As before, we see that Ac is easily fooled by adversarial learning and that Bc is not. It appear weird that Bc does an amazing job at classifying the adversarial-test-set, but remember that the noise given to the adversarial-test-set depends on the output. Therefore, building this adversarial-test-set, we gave informations about which classes the samples belonged in.
+			As before, also, we have that Bc is not doing an amazing job on the noisy test-set. The adversarial-classifier can't predict a sample with random noise much better than Ac does.
+
+		\subsection{CIFAR summary}
+			With this new dataset, we confirm some of the observations we've made earlier with the MNIST dataset. Sadly, the higher dimensionality needed on the models made us unable to recompute all the tests performed earlier.
 	
 
-	on the cifar10 dataset
+	\section{Covertype dataset}
+	\label{sub:covertype_dataset}
+		This is the third and last dataset we performed experiments on. This one is called the covertype dataset\footnote{\url{https://archive.ics.uci.edu/ml/datasets/Covertype}}. We elected this dataset because its nature was far from the two image dataset seen previously and because it consists on a multi-class classification task. With this dataset we "classify the predominant kind of tree cover from strictly cartographic variables". The samples belongs in 7 classes and the input vectors are composed by 54 values. Here the 54 values are not necessarily in a given range. It might happen that a value is a numeric encoding.
 
-	on an other dataset
-	% # => 150 -> yes
-	% 0.511660728731
-	% 0.510628044268
+		\subsection{Training Covertype}
+			Learning this dataset was not as successful as learning the two other datasets. We've trained many models hopping to see an adversarial one better than its non-adversarial equivalence but it never really happened. the results we got are the followings:
 
-	% # => 120 -> no
-	% 0.510774341233
-	% 0.511152992203
+			\begin{table}[ht]
+				\centering
+				\begin{tabular}{c||c|c|c|c|c}
+					hidden neurons & 60 & 80 & 100 & 120 & 150 \\
+					\hline
+					non-adversarial & $.5103$ & $.5107$ & $.5116$ & $.5108$ & $.5108$ \\
+					adversarial     & $.5106$ & $.5111$ & $.5103$ & $.5106$ & $.5116$ \\
+				\end{tabular}
+				\caption{Accuracy of adversarial and non-adversarial models with different amount of hidden neurons on the Covertype dataset.}
+				\label{tab:cov_acc}
+			\end{table}
 
-	% # => 100 -> no
-	% 0.51174678577
-	% 0.511781208585
+		\subsection{Covertype summary}
+			From this experiment we learn that adversarial-learning won't necessarily perform better non-adversarial-learning on every dataset. The fact that adversarial-learning doesn't perform better here is relevant with the nature of the dataset.
 
-	% # => 100 -> yes
-	% 0.510800158345
-	% 0.510301027521
 
-	% # => 80 -> yes
-	% 0.510757129826
-	% 0.510671072787
+		% # => 150 -> yes
+		% 0.511660728731
+		% 0.510628044268
+		% # => 120 -> no
+		% 0.510774341233
+		% 0.511152992203
+		% # => 100 -> yes
+		% 0.510800158345
+		% 0.510301027521
+		% # => 80 -> yes
+		% 0.510757129826
+		% 0.510671072787
+		% # => 60 -> no
+		% 0.510352661744
+		% 0.511677940139
 
-	% # => 60 -> no
-	% 0.512469664894
-	% 0.512521299117
-
-	% # => 60 -> no
-	% 0.510352661744
-	% 0.511677940139
+	\section{Adversarial learning conclusion}
+	\label{sub:adversarial_learning_conclusion}
+		Here ends our experiments on the different datasets. we'll come back on the results obtained here in the conclusion. We are now going to see how we implemented these experiments.

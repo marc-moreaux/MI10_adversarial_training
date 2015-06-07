@@ -1,9 +1,11 @@
 
+\input{setup/preamble.tex}% package inclusion and set up of the document
+\input{setup/hyphenations.tex}% 
+\input{setup/macros.tex}% my new macros
 
-\documentclass[a4paper]{article}
 
-\usepackage[english]{babel}
-\usepackage[utf8]{inputenc}
+
+
 \usepackage{amsmath}
 \usepackage{graphicx}
 \usepackage{fancyref}
@@ -61,14 +63,23 @@
 \makeatother
 
 
-\title{Adversarial training on neural networks.}
+\title{Adversarial-learning on shallow-neural-networks.}
 
 \author{Marc Moreaux}
 
 \date{\today}
 
 \begin{document}
-\maketitle
+
+\input{sections/frontpage.tex}
+\input{sections/colophon.tex}
+\input{sections/titlepages.tex}
+\cleardoublepage
+\pdfbookmark[0]{Contents}{label:contents}
+\pagestyle{fancy} %enable headers and footers again
+\tableofcontents
+\input{sections/preface.tex}
+\cleardoublepage
 
 
 \include{introduction}
@@ -76,6 +87,7 @@
 % \include{softmax}
 \include{adversarial_learning}
 \include{implementation}
+\include{conclusion}
 \include{appendix}
 
 

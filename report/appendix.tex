@@ -1,33 +1,33 @@
 
 \begin{appendices}
 	
-	\section{Two neurons neural network's cost}
-	\label{sec:2N_NN_cost}
-		Here we want to derive the cost $C$ of neural network\ref{fig:2N_NN} with respect to $x$. We first detail all the variables and then proceed to derivation.
-		\begin{itemize}
-			\item $C$ is the cost defined for sample $i$ as $C_i = y_i \ln(p_i) + (1-y_i)\ln(1-p_i)$, and the total cost $C$ is the mean of over the samples' costs.
-			\item $p_i$ is the prediction for sample $i$. It's defined by $p_i = \sigma(z)$
-			\item $\sigma(z)$ is the sigmoid function: $\sigma(z) = \frac{1}{1 + e^{-z}}$. It's derivative with respect to $z$ is $\sigma(z)(1-\sigma(z))$
-			\item $z$ is a term introduced to narrow the notation. $z=W^Tx+b$.
-			\item $W^T$ is the weight matrix such that $W^j$ is the weight vector for neuron $j$
-			\item $b$ is a bias term. It can be considered as a weight to a feature always equal to one.
-			\item $x_i$ is an input sample vector defined by its features.
-		\end{itemize}
-		Now, we use the chain rule to derive the Cost $C_i$ with respect to input $x$
-		\begin{equation}
-			\begin{split}
-				\frac{\delta C_i}{\delta x} &= \frac{\delta C_i}{\delta p_i} \frac{\delta p_i}{\delta x} \\
-				&= y_i \frac{1}{p_i} \frac{\delta p_i}{\delta x} + (1-y_i)\frac{1}{1-p_i} \frac{\delta (1-p_i)}{\delta x} \\
-				&= \frac{y_i}{p_i} p_i(1-p_i)\frac{\delta z}{\delta x} + \frac{1-y_i}{1-p_i} -(p_i)(1-p_i) \frac{\delta z}{\delta x} \\
-				&= \left( y_i (1-p_i) + (1-y_i) (-p_i)   \right) \frac{\delta z}{\delta x} \\
-				&= W \left( y_i (1-p_i) + (1-y_i) (0-p_i)  \right)  \\
-				&= W \left( y_i -p_i                       \right)
-			\end{split}
-		\end{equation}
+	% \chapter{Two neurons neural network's cost}
+	% \label{sec:2N_NN_cost}
+	% 	Here we want to derive the cost $C$ of neural network\ref{fig:2N_NN} with respect to $x$. We first detail all the variables and then proceed to derivation.
+	% 	\begin{itemize}
+	% 		\item $C$ is the cost defined for sample $i$ as $C_i = y_i \ln(p_i) + (1-y_i)\ln(1-p_i)$, and the total cost $C$ is the mean of over the samples' costs.
+	% 		\item $p_i$ is the prediction for sample $i$. It's defined by $p_i = \sigma(z)$
+	% 		\item $\sigma(z)$ is the sigmoid function: $\sigma(z) = \frac{1}{1 + e^{-z}}$. It's derivative with respect to $z$ is $\sigma(z)(1-\sigma(z))$
+	% 		\item $z$ is a term introduced to narrow the notation. $z=W^Tx+b$.
+	% 		\item $W^T$ is the weight matrix such that $W^j$ is the weight vector for neuron $j$
+	% 		\item $b$ is a bias term. It can be considered as a weight to a feature always equal to one.
+	% 		\item $x_i$ is an input sample vector defined by its features.
+	% 	\end{itemize}
+	% 	Now, we use the chain rule to derive the Cost $C_i$ with respect to input $x$
+	% 	\begin{equation}
+	% 		\begin{split}
+	% 			\frac{\delta C_i}{\delta x} &= \frac{\delta C_i}{\delta p_i} \frac{\delta p_i}{\delta x} \\
+	% 			&= y_i \frac{1}{p_i} \frac{\delta p_i}{\delta x} + (1-y_i)\frac{1}{1-p_i} \frac{\delta (1-p_i)}{\delta x} \\
+	% 			&= \frac{y_i}{p_i} p_i(1-p_i)\frac{\delta z}{\delta x} + \frac{1-y_i}{1-p_i} -(p_i)(1-p_i) \frac{\delta z}{\delta x} \\
+	% 			&= \left( y_i (1-p_i) + (1-y_i) (-p_i)   \right) \frac{\delta z}{\delta x} \\
+	% 			&= W \left( y_i (1-p_i) + (1-y_i) (0-p_i)  \right)  \\
+	% 			&= W \left( y_i -p_i                       \right)
+	% 		\end{split}
+	% 	\end{equation}
 
 
 
-	\section{Weight initialisation on simple example} % (fold)
+	\chapter{Weight initialisation on simple example} % (fold)
 	\label{sec:weight_initialisation_on_simple_example}
 
 		The \fref{fig:simple_NN_init} shows our simple example initalized with some specific hand-engineered features.
@@ -99,18 +99,31 @@
 		\end{figure}
 	
 
-	\section{Softmax layer}
-	\label{sec:softmax_layer}
-		tata
-		
+	\chapter{Hadamard and Kronecker products}
+	\label{sec:hadamar_product}
+		The \textbf{Hadamar} product "$\circ$" is a mathematical operation used in between two matrices of same shapes (or two vectors). This operator computes an element-wise multiplication of "$ij$" elements of the matrices. Here is an example: 
+		$$
+		\left(\begin{array}{ccc} \mathrm{a}_{11} & \mathrm{a}_{12} & \mathrm{a}_{13}\\ \mathrm{a}_{21} & \mathrm{a}_{22} & \mathrm{a}_{23}\\ \mathrm{a}_{31} & \mathrm{a}_{32} & \mathrm{a}_{33} \end{array}\right) \circ 
+		\left(\begin{array}{ccc} \mathrm{b}_{11} & \mathrm{b}_{12} & \mathrm{b}_{13}\\ \mathrm{b}_{21} & \mathrm{b}_{22} & \mathrm{b}_{23}\\ \mathrm{b}_{31} & \mathrm{b}_{32} & \mathrm{b}_{33} \end{array}\right) = 
+		\left(\begin{array}{ccc} \mathrm{a}_{11}\, \mathrm{b}_{11} & \mathrm{a}_{12}\, \mathrm{b}_{12} & \mathrm{a}_{13}\, \mathrm{b}_{13}\\ \mathrm{a}_{21}\, \mathrm{b}_{21} & \mathrm{a}_{22}\, \mathrm{b}_{22} & \mathrm{a}_{23}\, \mathrm{b}_{23}\\ \mathrm{a}_{31}\, \mathrm{b}_{31} & \mathrm{a}_{32}\, \mathrm{b}_{32} & \mathrm{a}_{33}\, \mathrm{b}_{33} \end{array}\right)
+		$$
+
+		The \textbf{Kronecker} product "$\otimes$" is a mathematical operation used in between two matrices. This operator augments each matrix elements (\textit{a}) by another matrix (\textit{B}) multiplying \textit{B} by \textit{a}.
+		$$ 
+		\mathbf{A}\otimes\mathbf{B} = \left( \begin{matrix} a_{11} \mathbf{B} & \cdots & a_{1n}\mathbf{B} \\ \vdots & \ddots & \vdots \\ a_{m1} \mathbf{B} & \cdots & a_{mn} \mathbf{B} \end{matrix}\right)
+		$$
 
 
-	\section{Vectors and matrices}
+
+	\chapter{Vectors and matrices}
 	\label{sec:vectors_and_matrices}
+		On this appendix, we summarize the notation used for the neural networks and give the shape of the vectors in the case of our simple example (Se) and in the case of the 800 hidden neurons adversarial model trained on MNIST (model B). These shapes will be written in parenthesis at the end of each lines
 		\begin{itemize}
-			\item $x^i$ is a vector. In the case of an image, it has as many values as there is pixels.
-			\item $w^l$ is a matrix where each colums represent a feature detector. $w^l$ has as many columns as there is neurons on the layer $l$ and as many lines as there is inputs in layer $l-1$. On the \fref{fig:simple_NN_init} the weights correspond to the numbers initilized on the edges in between each layers.
-			\item $b^l$ is a vector. It has as many values as there is neurons on the layer $l$.
+			\item $\boldsymbol{x}^i$ is the inputs vector. In the case of an image, it has as many values as there is pixels. Se(3,1), B(784,1)
+			\item $\boldsymbol{W}^l$ is a weight matrix where each columns represent a feature detector. $w^l$ has as many columns as there is neurons on the layer $l$ and as many lines as there is inputs in layer $l-1$. On the \fref{fig:simple_NN_init} the weights correspond to the numbers initialized on the edges in between each layers. Se(3,3), B(784,800)
+			\item $\boldsymbol{b}^l$ is a bias vector. It has as many values as there is neurons on the layer $l$. Se(3,1), B(784,1)
+			\item $\boldsymbol{a}^l$ is the output vector of a layer. It has as many values as there is neurons on layer $l$. Se(3,1), B(800,1)
+			\item $\boldsymbol{z}^l$ is the input vector of a layer, what comes right before the transfer function (like the sigmoid). It has as many values as there is neurons on layer $l$. Se(3,1), B(800,1)
 		\end{itemize}
 	
 

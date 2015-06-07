@@ -1,35 +1,34 @@
 
-\section{Introduction} 
+\chapter{Introduction} 
 \label{sec:introduction}
 	
-	This machine learning master thesis is about neural-networks (section \ref{sec:neural_networks}). We'll investigate on a technique called adversarial-learning to know if it can help neural-networks in performing better.
+	This machine learning master thesis is about neural-networks (section \ref{sec:neural_networks}). We'll investigate on a technique called adversarial-learning (section \ref{sec:adversarial_learning}) to know if it can help neural-networks in performing better.
 
 
-	\subsection{Motivation}
-		At the very beginning of this thesis, there is me, the writer. I wanted, from the very first day, to work on neural-networks and more specifically on deep-learning. I wanted so, because deep-learning has become in the last decade the most efficient algorithm at classifying images. 
-		I was then searching for a topic. I discovered the work made by Ian J. Goodfellow, Jonathon Shlens and Christian Szegedy. In their publication named "Explaining and Harnessing Adversarial Examples"\cite{goodfellow2014explaining} they motivate that adversarial learning could improve the accuracy of some given neural-networks. After contacting one of the authors of this publication, it appeared that it would be a good contribution to validate their observations on other datasets, since most of their test are based on the MNIST dataset\cite{lecun-mnist}. Therefore, the following thesis is about further validating the proposed adversarial-learning method described in \cite{goodfellow2014explaining} with different parameter and different databases.
+	\section{Motivation}
+		At the very beginning of this thesis, there is me, the writer. I wanted, from the very first day, to work on neural-networks and more specifically on deep-learning. I wanted so, because neural-networks has become in the last decade the most efficient algorithm at classifying images. 
+		I was then searching for a topic. I discovered the work made by Ian J. Goodfellow, Jonathon Shlens and Christian Szegedy. In their publication named "Explaining and Harnessing Adversarial Examples"\cite{goodfellow2014explaining} they motivate that adversarial learning could improve the accuracy of some given neural-networks. After contacting one of the authors of this publication, it appeared that it would be a good contribution to validate their observations on other datasets, since most of their test are based on the MNIST dataset\cite{lecunmnist}. Therefore, the following thesis is about further understanding and validating the proposed adversarial-learning method described in \cite{goodfellow2014explaining} with different parameter and different databases.
 
-	\subsection{Methodology}
-		We are therefore going to investigate on how is adversarial-learning performing on specific neural-networks called shallow-neural-networks. For the investigation we'll evaluate the impact of some parameters on the network and will also evaluate the model on differnet databases. On the same time, we are going to investigate on the reasons underlining the adversarial performances. To do so, we will first re-implement the proposed solution of \cite{goodfellow2014explaining} in such a way that we isolate adversarial-learning from other techniques used in the paper. At this point we will emphasize the benefits of adversarial-learning. 
+	\section{Methodology}
+		We are therefore going to investigate on how is adversarial-learning performing on specific neural-networks called shallow-neural-networks. For the investigation we'll evaluate the impact of different parameters on the model, we are going to compare the adversarial-model with some others and will also evaluate few adversarial-models on different databases. On the same time, we are going to investigate on the reasons underlining the adversarial performances. To do so, we will first re-implement the proposed solution of \cite{goodfellow2014explaining} in such a way that we isolate adversarial-learning from other techniques used in the paper. At this point we will emphasize the benefits of adversarial-learning.
 
-		We will then move to another dataset similar to the first one, there will also be 10 different classes of images to classify. That dataset will be the CIFAR10\cite{CIFAR10_BITCHES}. Again, some knowledge will be acquired from this experience. Finally, we will test the adversarial-learning on a dataset of other nature. The one we would try is a phoneme dataset: the TIMIT dataset\cite{maybe...}. The results obtained from this dataset will further validate the technique as useful for classification in the context of shallow-neural-network.
+		We will then move to another dataset similar to the first one, there will also be 10 different classes of images to classify. That dataset will be the CIFAR10\cite{krizhevsky2009learning}. Again, some knowledge will be acquired from this experience. Finally, we will test the adversarial-learning on a dataset of other nature. The one we will try is a tree location dataset: the Covertype dataset\footnote{\url{https://archive.ics.uci.edu/ml/datasets/Covertype}}. The results obtained from this dataset bring new insights on adversarial-learning.
 
-	\subsection{Expected outcome}
-		In their paper, Ian J. Goodfellow, Jonathon Shlens and Christian Szegedy, described their technique to able to ??? 
-		=> How adversarial learning best separate the classes.
-		With this adversarial-learning technique we expect the network to learn the differences between classes more than just the pattern of a class.
+	\section{Expected outcome}
+		In their paper, Ian J. Goodfellow, Jonathon Shlens and Christian Szegedy, described classic shallow-neural-networks to be too linear in what they learn. by linear they meant that the classifier was too much feating the data distribution given on the train-set. With adversarial-learning, they aim at learning a classifier relying less on the inputs data as such but better relying on the idea of the class.
+		
+		At the end of the report, one can expect to better understand adversarial learning. One can expect understanding the advantages of adversarial-learning on a more classic approach to learning. Also, we'll demonstrate that this learning technique generalizes to other datasets.
 
-
-	\subsection{Adversarial-learning}
+	\section{Adversarial-learning}
 		Until now, we've been speaking a lot of adversarial-learning without explaining what it is about. Lets start off with mentioning what an adversarial sample to a classifier would be. Imagine you have full knowledge of a given classifier. Starting from there, you can create samples to this classifier that are going to give some predictions. Knowing how does the classifier behaves, you can creates samples leading your classifier to some mistakes. This are adversarial samples. In machine learning, adversarial-learning is about creating a classifier resisting to adversarial samples.
 
-		In the publication that interest us\cite{goodfellow2014explaining}, the authors noticed that twisting each pixels of the input images by some very specific values (the adversarial values), an accurate classifier could be easily fooled. Lets detail : Consider you have a classifier able to recognize the MNIST dataset and this classifier makes 10 errors when guessing the classes of 200 samples. Now, if you modify each pixels of these 200 samples by a little value, the classifier makes 180 errors. You've fooled your classifier with adversarial samples.
+		In the publication that interest us\cite{goodfellow2014explaining}, the authors noticed that twisting each pixels of the input images by some very specific values (the adversarial values), an accurate classifier could be easily fooled. Lets detail : Consider you have a classifier able to recognize the MNIST dataset and this classifier makes 10 errors when guessing the classes of 200 samples ($95\%$ accuracy). Now, if you modify each pixels of these 200 samples by a little value, the classifier makes 180 errors ($10\%$ accuracy). You've fooled your classifier with adversarial samples.
 
-		The adversarial-learning algorithm we use is going to learn from adversarial samples. Therefore, at any time the algorithm want to predict the class of a sample, he will predict the class of the adversarial sample. It's with this approach that we aim at diminishing the error rate of the classifier.
+		The adversarial-learning algorithm we use is going to learn from adversarial samples. Therefore, at any time the algorithm want to predict the class of a sample, he will predict the class of the adversarial sample. It's with this approach that we aim at augmenting the accuracy of the classifier.
 
 
-	\subsection{Running example}
-		On the next sections we will explain what are neural-networks, how do we train them and how adversarial-learning apply to them. All along these explanations we will use an example to illustrate our 'propos'.
+	\section{Running example, the 'simple example'}
+		On the next sections we will explain what are neural-networks, how do we train them and how adversarial-learning apply to them. All along these explanations we will use an example called the "simple example" to illustrate our definitions.
 
 
 		The \textbf{task} of our example is to predict the class of an image. There is 3 types of images, a \textit{dot}, a \textit{column} and a \textit{comma}. When a sample is called to be a \textit{dot}, it is referred as belonging to class $y=1$. When it's a \textit{comma}, a class $y=2$ and a \textit{column} a class $y=3$.
@@ -51,6 +50,10 @@
 		Where $\boldsymbol{x}^i$ refer to the input sample $i$ and $y^i$ refer to the class of sample $i$.
 
 		The \textbf{model} we are going to use is a neural-network. Because it has few layers, it's also referred as a shallow-neural-network. Our simple neural-network will have 3 inputs, one for each pixel of the images, 3 hidden neurons and 3 output neurons. \Fref{fig:simple_NN} is a graphical representation of our model.
+
+		\vskip 1cm
+		\textbf{Notation: }\\
+		$y$ is the class of a sample. This $y$ is an integer representation of the class (1, 2, 3 ...). We'll often use the 'one-hot' notation of this value. For instance, if there is 3 possible classes, the one-hot version of $y=2$ will be $\boldsymbol{y} = [0,1,0]$. Where the second value of $\boldsymbol{y}$ is '1' and all the rest are '0'.
 
 		\begin{figure}
 			\centering
@@ -155,7 +158,7 @@
 	% 	\end{figure}
 
 
-	% \subsection{Adversarial learning}
+	% \section{Adversarial learning}
 	% 	Imagine you are allowed to modify each pixels of our image by a value $\epsilon$. Intuitively, if you want to improve the recognition, you would increase the contrast in the picture and insist on the dots where the aught to be. On the other hand, if you want to confuse the recognition, you would lower the contrast and add color where there shouldn't be.
 
 	% 	These properties are the ones we aught to enforce with our adversarial learning. For an epsilon small enough, we subtract to $x^i$ $\epsilon$ times the sign of the derivative with respect to $x^i$ of the Cost $C^i$.
@@ -184,5 +187,5 @@
 	% 	Once we have these derivatives, the worst modification we can make to sample $x^i$ is by following this derivative. 
 		
 
-	% \subsection{Dataset}
+	% \section{Dataset}
 	% 	The first dataset we will be using is the MNIST\ref{??} dataset. This dataset is composed by 60k gray scale images. Each of them represent a hand written digit (6k of each). 
