@@ -6,6 +6,7 @@ import pickle as pkl
 import my_preprocessors as preproc
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
+import scipy.ndimage.interpolation
 
 from pylearn2.utils import serial
 from pylearn2.datasets import dense_design_matrix
@@ -94,8 +95,34 @@ class Test_set():
 
         if m_type == 'adv':
             ds.apply_preprocessor(preprocessor=Adversarial_modif(model_used.model, model_used.learning_eps, eps_to_modif), can_fit=True)
+        
         elif m_type == 'norm':
             ds.apply_preprocessor(preprocessor=Normal_modif('norm', eps_to_modif), can_fit=True)
+        
+        elif m_type == 'rot':
+            X = ds.X
+            for idx, img in enumerate(X):
+                img = img.reshape(28,28)
+                img = scipy.ndimage.interpolation.rotate(img, eps_to_modif*100, reshape=False)
+                X[idx] = img.reshape(28*28)
+            ds = dense_design_matrix.DenseDesignMatrix(X=X, y=self.y, y_labels=10)
+        
+        elif m_type == 'zoom':
+            X = ds.X
+            for idx, img in enumerate(X):
+                img = img.reshape(28,28)
+                img = scipy.ndimage.interpolation.zoom(img, eps_to_modif)
+                X[idx] = img.reshape(28*28)
+            ds = dense_design_matrix.DenseDesignMatrix(X=X, y=self.y, y_labels=10)
+        
+        elif m_type == 'shift':
+            X = ds.X
+            for idx, img in enumerate(X):
+                img = img.reshape(28,28)
+                img = scipy.ndimage.interpolation.shift(img, eps_to_modif*3)
+                X[idx] = img.reshape(28*28)
+            ds = dense_design_matrix.DenseDesignMatrix(X=X, y=self.y, y_labels=10)
+
         elif m_type == 'none':
             return ds.X, self.y
 
@@ -368,6 +395,22 @@ def plot_orig_testset(db_name='MNIST', save_name=None):
 
 
 
+
+t_s = Test_set()
+x = [.0,.1,.2,.3]
+imgs = []
+for i,eps_test in enumerate(x):
+    plt.subplot(1,4,i+1)
+    data = t_s.modified_dataset('rot',eps_test,None)
+    imgs.append(np.copy(data[0][1,:]))
+    plt.imshow(imgs[i].reshape(28,28), cmap = cm.Greys_r)
+
+plt.savefig('./mem/bar_plot_testset_rot.png', dpi=100, bbox_inches='tight')
+plt.show()
+
+plot_test_set_impact('MNIST','rot', save_name='test_set_impact_rot')
+
+
 # m_used = Model_used(.25,2500,'adv','CIFAR')
 # test_s = Test_set('CIFAR')
 
@@ -399,4 +442,4 @@ def plot_orig_testset(db_name='MNIST', save_name=None):
 # CIFAR 10
 
 # plot_test_set_impact('CIFAR', 'norm' ,"testset_impact_norm_CIFAR")
-plot_orig_testset('CIFAR', 'orig_CIFAR')
+# plot_orig_testset('CIFAR', 'orig_CIFAR')

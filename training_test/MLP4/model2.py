@@ -6,6 +6,7 @@ import pickle as pkl
 import my_preprocessors as preproc
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
+import scipy.ndimage.interpolation
 
 import pylearn2
 from pylearn2.utils import serial
@@ -14,8 +15,10 @@ from pylearn2.format.target_format import convert_to_one_hot
 
 from my_preprocessors import Normal_modif
 from my_preprocessors import Adversarial_modif
+from my_preprocessors import Other_modif
 
 from random import randint
+
 
 
 class Model_used():
@@ -108,6 +111,13 @@ class Set():
             ds.apply_preprocessor(preprocessor=Adversarial_modif(model_used.model, model_used.learning_eps, eps_to_modif), can_fit=True)
         elif m_type == 'norm':
             ds.apply_preprocessor(preprocessor=Normal_modif('norm', eps_to_modif), can_fit=True)
+        elif m_type == 'rot':
+            X = ds.X
+            for idx, img in enumerate(X):
+                img = img.reshape(28,28)
+                img = scipy.ndimage.interpolation.rotate(img, eps_to_modif*100, reshape=False)
+                X[idx] = img.reshape(28*28)
+            ds = dense_design_matrix.DenseDesignMatrix(X=X, y=self.y, y_labels=10)
         elif m_type == 'none':
             return ds.X, self.y
 
@@ -364,7 +374,7 @@ def plot_testset_noisy(noise='adv', use_norm=False, save_name=None):
         x.shape
         x_shape = int(math.sqrt(x.shape[0]))
         plt.subplot(1,4,i+1)
-        plt.imshow(x.reshape((x_shape,x_shape)), cmap = cm.Greys_r)
+        plt.imshow(x.reshape(x_shape,x_shape), cmap = cm.Greys_r)
         plt.axis('off')
         plt.xlabel(eps_noise)
         if i == 0:
@@ -396,16 +406,18 @@ def plot_orig_testset(db_name='MNIST', save_name=None):
         plt.show()
 
 
+
+
 plot_orig_testset('MNIST', 'MNIST_orig')
 
-# test_s = Set('test', 'MNIST_bin')
-# # for nhid in [2,5,25,100,200,800,1200,1400,1800,2000]:
-# for nhid in [400]:
-#     plot_weights_class(nhid, 'MNIST_bin', [.0,.05,.1,.15,.2,.25])
-#     # print nhid
-#     # for eps_adv in [.0,.25]:
-#     #     m_used = Model_used(nhid, eps_adv, 'MNIST_bin')
-#     #     print m_used.accuracy(test_s.get_data())
-#     # print "--"
+test_s = Set('test', 'MNIST_bin')
+# for nhid in [2,5,25,100,200,800,1200,1400,1800,2000]:
+for nhid in [400]:
+    plot_weights_class(nhid, 'MNIST_bin', [.0,.05,.1,.15,.2,.25], "weights_class_auto")
+    # print nhid
+    # for eps_adv in [.0,.25]:
+    #     m_used = Model_used(nhid, eps_adv, 'MNIST_bin')
+    #     print m_used.accuracy(test_s.get_data())
+    # print "--"
             
 

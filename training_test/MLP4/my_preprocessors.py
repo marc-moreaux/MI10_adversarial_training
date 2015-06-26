@@ -15,6 +15,7 @@ from pylearn2.utils.data_specs import DataSpecsMapping
 from pylearn2.format.target_format import convert_to_one_hot
 from pylearn2.datasets.preprocessing import Preprocessor
 
+import scipy.ndimage.interpolation
 
 
 class Adversarial_modif(Preprocessor):
@@ -91,6 +92,37 @@ class Normal_modif(Preprocessor):
         # Bound X between 0 and 1
         noise = eps_var * distr
         f = function([X_var, eps_var], T.clip(X_var +  noise, 0, 1) )
+
+        # Apply the function
+        dataset.X = f( X, eps )
+
+
+
+# Not working !
+class Other_modif(Preprocessor):
+    def __init__(self, distr_type='rot', training_eps=0.07):
+        self.__dict__.update(locals())
+        del self.self
+        self.distr_type = distr_type
+        self.training_eps = training_eps
+
+    def apply(self, dataset, can_fit=False):
+        """
+        .. todo::
+
+            bla bla
+        """
+        # Get X from the dataset
+        X = dataset.X
+
+        # Declare all the variables
+        X_var = T.TensorType(broadcastable=[s == 1 for s in X.shape],dtype=X.dtype)()
+        eps = self.training_eps
+        eps_var = T.dscalar('eps')
+
+        
+        if self.distr_type == 'rot':
+            f = function([X_var, eps_var], T.clip( scipy.ndimage.interpolation.rotate(X_var.reshape(28,28),eps_var) ).reshape(28*28,-1) )
 
         # Apply the function
         dataset.X = f( X, eps )

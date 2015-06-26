@@ -98,23 +98,25 @@
 %###############################
 \section{Introduction}
 \begin{frame}{Introduction}{}
-  \begin{itemize}
-    \item<1-> Why are shallow-feed-forward-neural-networks not resistant to adversarial-samples ?
-    \item<1-> Can adversarial-learning improve shallow-feed-forward-neural-networks' learning, and why ?
-    \item<2-> Continue the work made by Ian J. Goodfellow, Jonathon Shlens and Christian Szegedy in "Explaining and Harnessing Adversarial Examples".    
-  \end{itemize}
+  \begin{block}{"Explaining and harnessing adversarial examples"}
+  by Ian J. Goodfellow, Jonathon Shlens and Christian Szegedy
+    \begin{itemize}
+      \item<2-> Neural-networks consistently mis-classify adversarial examples.
+      \item<3-> Caused by linear nature of the network.
+      \item<4-> Can be overcome with adversarial-learning.
+    \end{itemize}
+  \end{block}
 \end{frame}
 
 
-\subsection{Explaining and harnessing adversarial examples}
-\begin{frame}{Introduction}{Explaining and harnessing adversarial examples}
-  \begin{block}{Explaining and harnessing adversarial examples}
-    \begin{itemize}
-      \item<1-> Neural-networks consistently mis-classify adversarial examples.
-      \item<2-> Caused by linear nature of the network.
-      \item<3-> Can be overcome with adversarial-learning.
-    \end{itemize}
-  \end{block}
+\begin{frame}{Introduction}{}
+  \begin{itemize}
+    \item<1-> Continue the work exposed in "Explaining and Harnessing Adversarial Examples".
+    \vskip 1cm
+    \item<2-> Are shallow-feed-forward-neural-networks too linear ?
+    \item<2-> Are shallow-feed-forward-neural-networks relying too much on the underlining distribution of the data ?
+    \item<2-> Can adversarial-learning improve shallow-feed-forward-neural-networks' learning ?
+  \end{itemize}
 \end{frame}
 
 
@@ -124,38 +126,38 @@
 %###############################
 \section{Background}
 \subsection{Neural-networks}
-\begin{frame}{Background}{Neural-networks}
-  \begin{block}{Neurons}
-    Artificial representation of a biological Neuron.
-    \pause
-    \begin{figure}
-      \centering
-      \def\layersep{1.5cm}
-      \begin{tikzpicture}[shorten >=1pt,->,draw=black!50, node distance=\layersep]
-        \tikzstyle{tata}=[,minimum size=17pt,inner sep=0pt]
-          \tikzstyle{neuron}=[circle,fill=black!25,minimum size=17pt,inner sep=0pt]
-          \tikzstyle{output neuron}=[neuron, fill=red!50];
+% \begin{frame}{Background}{Neural-networks}
+%   \begin{block}{Neurons}
+%     Artificial representation of a biological Neuron.
+%     \pause
+%     \begin{figure}
+%       \centering
+%       \def\layersep{1.5cm}
+%       \begin{tikzpicture}[shorten >=1pt,->,draw=black!50, node distance=\layersep]
+%         \tikzstyle{tata}=[,minimum size=17pt,inner sep=0pt]
+%           \tikzstyle{neuron}=[circle,fill=black!25,minimum size=17pt,inner sep=0pt]
+%           \tikzstyle{output neuron}=[neuron, fill=red!50];
 
-          % Input neurons
-          \node[tata] (x1) at (0,-1 cm) {$x_1$};
-          \node[tata] (x2) at (0,-2 cm) {$x_2$};
-          \node[tata] (x3) at (0,-3 cm) {...};
-          \node[tata] (x4) at (0,-4 cm) {$x_m$};
+%           % Input neurons
+%           \node[tata] (x1) at (0,-1 cm) {$x_1$};
+%           \node[tata] (x2) at (0,-2 cm) {$x_2$};
+%           \node[tata] (x3) at (0,-3 cm) {...};
+%           \node[tata] (x4) at (0,-4 cm) {$x_m$};
           
-          % Draw the output layer node
-          \node[neuron,pin={[pin edge={->}]right:Output}] (O) at (\layersep,-2.5) {};
+%           % Draw the output layer node
+%           \node[neuron,pin={[pin edge={->}]right:Output}] (O) at (\layersep,-2.5) {};
 
-          % Connect every node in the hidden layer with the output layer
-          \path (x1) edge (O);
-          \path (x2) edge (O);
-          \path (x4) edge (O);
+%           % Connect every node in the hidden layer with the output layer
+%           \path (x1) edge (O);
+%           \path (x2) edge (O);
+%           \path (x4) edge (O);
 
-      \end{tikzpicture}
-      \caption{Model of an artificial neuron}
-      \label{fig:perceptron}
-    \end{figure}
-  \end{block}
-\end{frame}
+%       \end{tikzpicture}
+%       \caption{Model of an artificial neuron}
+%       \label{fig:perceptron}
+%     \end{figure}
+%   \end{block}
+% \end{frame}
 
 \begin{frame}{Background}{Neural-networks}
   \begin{block}{Neural-network}
@@ -163,54 +165,54 @@
     \pause
     \begin{figure}
       \centering
-      \def\layersep{1.5cm}
-      \resizebox{.5\textwidth}{!}{
+      \def\layersep{3cm}
+      \resizebox{.5\textwidth}{!}{%
         \begin{tikzpicture}[shorten >=1pt,->,draw=black!50, node distance=\layersep]
             \tikzstyle{every pin edge}=[<-,shorten <=1pt]
             \tikzstyle{neuron}=[circle,fill=black!25,minimum size=17pt,inner sep=0pt]
             \tikzstyle{annot} = [text width=4em, text centered]
+            \tikzstyle{pixel} = [rectangle, fill=black!10,minimum size=17pt,inner sep=0pt]
 
 
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
             %%% DRAW THE NODES
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-            \foreach \name / \y in {1,...,4}
-                \node[] (I-\name) at (0,-\y) {$x_{i\y}$};
+            \foreach \name / \y in {1,...,3}
+                \node[pixel] (I-\name) at (0,-1.5-\y) {$x_{\y}$};
+              \node[]      (I-4) at (0,-1.5-4) {...};
+                \node[pixel] (I-5) at (0,-1.5-5) {$x_{784}$};
 
-            \foreach \name / \y in {1,...,5}
-                \path[yshift=0.5cm] node[neuron] (H1-\name) at (\layersep,-\y cm) {};
 
-          \foreach \name / \y in {1,...,7}
-                \path[yshift=1.5cm] node[neuron] (H2-\name) at (\layersep*2,-\y cm) {};   
+            \foreach \name / \y in {1,...,6}
+              \node [neuron] (H1-\name) at (\layersep,-\y cm) {};
+            \node []       (H1-7) at (\layersep,-7 cm) {...};
+            \node [neuron] (H1-8) at (\layersep,-8 cm) {};
 
               
-            \node[neuron,pin={[pin edge={->}]right:$p_{i1}$}, right of=H2-3] (O-1) {};
-            \node[neuron,pin={[pin edge={->}]right:$p_{i2}$}, right of=H2-5] (O-2) {};
+            \node[neuron,pin={[pin edge={->}]right:$p_{1}$}, right of=H1-3] (O-1) {};
+            \node[neuron,pin={[pin edge={->}]right:$p_{2}$}, right of=H1-4] (O-2) {};
+            \node[right of=H1-5] (O-3) {...};
+            \node[neuron,pin={[pin edge={->}]right:$p_{10}$}, right of=H1-6] (O-4) {};
 
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
             %%% DRAW THE PATHS
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-            \foreach \source in {1,...,4}
-                \foreach \dest in {1,...,5}
+            \foreach \source in {1,...,3,5}
+                \foreach \dest in {1,...,6,8}
                     \path (I-\source) edge (H1-\dest);
 
-            \foreach \source in {1,...,5}
-                \foreach \dest in {1,...,7}
-                    \path (H1-\source) edge (H2-\dest);
-
-            \foreach \source in {1,...,7}
-              \foreach \dest in {1,...,2}
-                  \path (H2-\source) edge (O-\dest);
+            \foreach \source in {1,...,6,8}
+              \foreach \dest in {1,...,2,4}
+                  \path (H1-\source) edge (O-\dest);
 
             % Annotate the layers
-            \node[annot,above of=H2-1, node distance=1cm] (hl) {Hidden layer 2};
-            \node[annot,left of=hl] (hl1) {Hidden layer 1};
+            \node[annot,above of=H1-1, node distance=1cm] (hl1) {Hidden layer};
             \node[annot,left of=hl1] {Input layer};
-            \node[annot,right of=hl] {Output layer};
+            \node[annot,right of=hl1] {Output layer};
         \end{tikzpicture}
       }
-      \caption{Feed-forward neural-network with two hidden layers}
-      \label{fig:feed_forward}
+      \caption{Graphical model of a MNIST net}
+      \label{fig:mnist_net}
     \end{figure}
   \end{block}
 \end{frame}
@@ -221,8 +223,8 @@
     Worst case example build from an original sample and the knowledge we have from the model.
   \end{block}
   \pause
-  $$ \tilde{\boldsymbol{x}} = \boldsymbol{x} + \eta $$
-  $$ \eta = \epsilon_{\text{adv}} \times \text{sign}(\nabla_x \text{Cost}(\boldsymbol{W},\boldsymbol{x},\boldsymbol{y})) $$
+  $$ \tilde{\boldsymbol{x}} = \boldsymbol{x} + \boldsymbol{\eta} $$
+  $$ \boldsymbol{\eta} = \epsilon_{\text{adv}} \times \text{sign}(\nabla_{\boldsymbol{x}} \text{Cost}(\boldsymbol{W},\boldsymbol{x},\boldsymbol{y})) $$
   \vskip 1cm
   \pause
   \begin{block}{Adversarial-learning}
@@ -286,39 +288,81 @@
   \end{figure}
 \end{frame}
 
-\subsection{MNIST test on noisy dataset}
-\begin{frame}{Experiences}{MNIST test on noisy dataset}
-  \pause
-  \begin{figure}
-    \centering
-    \includegraphics[width=0.4\textwidth]{/home/marc/git/MI10_adversarial_training/training_test/MLP3/mem/bar_testset_impact_adv.png}
-    \includegraphics[width=0.4\textwidth]{/home/marc/git/MI10_adversarial_training/training_test/MLP3/mem/bar_testset_impact_norm.png}
-    \caption{Evaluate non-adversarial (dashed line) and adversarial models (plain line) of 800 hidden neurons on modified test-sets. On the left, we try the two models on an adversarial test-dataset. The horizontal axis represents the epsilon values used to modified the test-set. On the right, we try the two models on an normal-distribution-modified test-dataset with different standard deviations.}
-    \label{fig:mnist_adv_noisy_ds}
-  \end{figure}
-\end{frame}
-
-\begin{frame}{Experiences}{MNIST test on noisy dataset}
-  \pause
+\subsection{MNIST test on adversarial dataset}
+\begin{frame}{Experiences}{MNIST test on adversarial dataset}
   \begin{figure}
     \centering
     \includegraphics[width=0.7\textwidth]{/home/marc/git/MI10_adversarial_training/training_test/MLP3/mem/bar_noisy_ts_adv.png}\\
-    \includegraphics[width=0.7\textwidth]{/home/marc/git/MI10_adversarial_training/training_test/MLP3/mem/bar_noisy_ts_norm.png}
-    \caption{Extract of the test-set with the same image with different noises. On the top, you see the adversarial noised sample with $\epsilon_{\text{ads}} = [.0, .1, .2, .3]$. On the bottom you see the uniform noised sample with, from left to right the standard deviation taking values: $\epsilon_{\text{noise}} = [.0, .1, .2, .3]$}
-    \label{fig:mnist_adv_noisy_ds_img}
+    \pause
+    \includegraphics[width=0.4\textwidth]{/home/marc/git/MI10_adversarial_training/training_test/MLP3/mem/bar_testset_impact_adv.png}
+    \caption{Test non-adversarial and adversarial models on adversarial dataset.}
+    \label{fig:mnist_adv_result}
+  \end{figure}
+  \pause
+  \begin{itemize}
+      \item With our model, we make the same observations as the reference paper.
+    \end{itemize}  
+\end{frame}
+
+\subsection{MNIST test on noisy dataset}
+\begin{frame}{Experiences}{MNIST test on noisy dataset}
+  \begin{figure}
+    \centering
+    \includegraphics[width=0.7\textwidth]{/home/marc/git/MI10_adversarial_training/training_test/MLP3/mem/bar_noisy_ts_norm.png}\\
+    \pause
+    \includegraphics[width=0.4\textwidth]{/home/marc/git/MI10_adversarial_training/training_test/MLP3/mem/bar_testset_impact_norm.png}
+    \caption{Test non-adversarial and adversarial models on noisy dataset.}
+    \label{fig:mnist_noisy_result}
+  \end{figure}
+  \pause
+  \begin{itemize}
+    \item Model A and B perform the same on this noisy dataset.
+    \item B doesn't seems to generalize better the concept of the class.
+  \end{itemize}
+\end{frame}
+
+
+\subsection{MNIST test on shifted dataset}
+\begin{frame}{Experiences}{MNIST test on shifted dataset}
+  \begin{figure}
+    \centering
+    \includegraphics[width=0.7\textwidth]{/home/marc/git/MI10_adversarial_training/training_test/MLP3/mem/bar_plot_testset_shift.png}\\
+    \pause
+    \includegraphics[width=0.5\textwidth]{/home/marc/git/MI10_adversarial_training/training_test/MLP3/mem/bar_test_set_impact_shift.png}
+    \caption{Shift samples to bottom right and experiment adversarial learning and non-adversarial learning.}
+    \label{fig:mnist_adv_shift_ds_img}
+  \end{figure}
+  \pause
+\end{frame}
+
+\subsection{MNIST test on rotated dataset}
+\begin{frame}{Experiences}{MNIST test on rotated dataset}
+  \begin{figure}
+    \centering
+    \includegraphics[width=0.7\textwidth]{/home/marc/git/MI10_adversarial_training/training_test/MLP3/mem/bar_plot_testset_rot.png}\\
+    \pause
+    \includegraphics[width=0.5\textwidth]{/home/marc/git/MI10_adversarial_training/training_test/MLP3/mem/bar_test_set_impact_rot.png}
+    \caption{Rotate samples to bottom right and experiment adversarial learning and non-adversarial learning.}
+    \label{fig:mnist_adv_rot_ds_img}
   \end{figure}
 \end{frame}
 
-\subsection{MNIST compare with other traning method}
-\begin{frame}{Experiences}{MNIST compare with other traning method}
+
+\subsection{MNIST compare with other training method}
+\begin{frame}{Experiences}{MNIST compare with other training method}
   \pause
   \begin{figure}
     \centering
+    \includegraphics[width=0.4\textwidth]{/home/marc/git/MI10_adversarial_training/training_test/MLP3/mem/bar_testset_impact_2_norm.png} \pause
     \includegraphics[width=0.4\textwidth]{/home/marc/git/MI10_adversarial_training/training_test/MLP3/mem/bar_testset_impact_2_adv.png}
-    \includegraphics[width=0.4\textwidth]{/home/marc/git/MI10_adversarial_training/training_test/MLP3/mem/bar_testset_impact_2_norm.png}
     \caption{Evaluate normal-distribution-based model versus the casual and adversarial models of 800 hidden neurons on noisy test-sets and adversarial datasets.}
     \label{fig:mnist_noisy_learn}
   \end{figure}
+  \pause
+  \begin{itemize}
+    \item C relies on a uniform probability of the original distribution.
+    \item A is too linear
+  \end{itemize}
 \end{frame}
 
 \subsection{MNIST visualize weights}
@@ -327,9 +371,28 @@
   \begin{figure}
     \centering
     \includegraphics[width=0.4\textwidth]{/home/marc/git/MI10_adversarial_training/training_test/MLP3/mem/bar_weight_class_800.png}
-    \caption{Attempt at visualizing classes pattern on casual-model (top) and adversarial-model (bottom) of 800 neurons (left) and 2000 neurons (right).}
+    \caption{Attempt at visualizing classes pattern on casual-model (top) and adversarial-model (bottom) of 800 neurons}
     \label{fig:mnist_weight_class}
   \end{figure}
+  \pause
+  \begin{itemize}
+    \item Nothing to infer from this experiment.
+  \end{itemize}
+\end{frame}
+
+\subsection{MNIST test auto-encoder on binary MNIST}
+\begin{frame}{Experiences}{MNIST test auto-encoder on binary MNIST}
+  \begin{figure}
+    \centering
+    \includegraphics[width=0.4\textwidth]{/home/marc/git/MI10_adversarial_training/training_test/MLP4/mem/bar_weights_class_auto_400.png}
+    \caption{visualize weights of digits zero and one with adversarial and non-adversarial models trained on binary MNIST.}
+    \label{fig:mnist_bin_weight_class}
+  \end{figure}
+  \pause
+  \begin{itemize}
+    \item A is too linear
+    \item B's weights focuses on regions of interests.
+  \end{itemize}
 \end{frame}
 
 \subsection{CIFAR10 adversarial traning}
@@ -360,12 +423,23 @@
   \end{table}
 \end{frame}
 
+  \section{Results}
+  \begin{frame}{Experiences}{Results}
+    \pause
+    \begin{itemize}
+      \item<2-> Non-adversarial-learning (A) is too linear.
+      \item<2-> (A) and adversarial-learning (B) relies on the underlining data distribution.
+      \item<3-> (B) reduces linearity by focusing on specific regions of interest.
+    \end{itemize}
+  \end{frame}
+
 
 
 {\aauwavesbg
 \begin{frame}[plain,noframenumbering]
-  \finalpage{Thank you for your attention }
+  \finalpage{Thank you for your attention.}
 \end{frame}}
 %%%%%%%%%%%%%%%%
+
 
 \end{document}
