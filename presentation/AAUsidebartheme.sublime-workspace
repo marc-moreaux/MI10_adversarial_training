@@ -1,0 +1,517 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"path",
+				"path_model"
+			],
+			[
+				"eps",
+				"eps_noise"
+			],
+			[
+				"get_",
+				"get_models"
+			],
+			[
+				"plo",
+				"plot"
+			],
+			[
+				"train_",
+				"train_tuples"
+			],
+			[
+				"eps_",
+				"eps_to_modif"
+			],
+			[
+				"mode",
+				"model_path"
+			],
+			[
+				"models",
+				"models_paths"
+			],
+			[
+				"w",
+				"w2_thr"
+			],
+			[
+				"set",
+				"set_weights"
+			],
+			[
+				"upda",
+				"update_w2"
+			],
+			[
+				"X",
+				"X_var"
+			],
+			[
+				"weight",
+				"weights_file"
+			],
+			[
+				"data",
+				"dataset"
+			],
+			[
+				"pre",
+				"preprocessor"
+			],
+			[
+				"file_",
+				"file_has_node"
+			],
+			[
+				"currentNod",
+				"currentNode"
+			],
+			[
+				"prin",
+				"file_print"
+			],
+			[
+				"de",
+				"define"
+			],
+			[
+				"def",
+				"def	Function"
+			]
+		]
+	},
+	"buffers":
+	[
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 201.0,
+		"last_filter": "xela",
+		"selected_items":
+		[
+			[
+				"xela",
+				"LaTeXTools: Reconfigure and migrate settings"
+			],
+			[
+				"latext",
+				"LaTeXTools: Reconfigure and migrate settings"
+			],
+			[
+				"latexto",
+				"LaTeXTools: Reconfigure and migrate settings"
+			],
+			[
+				"instal",
+				"Package Control: Install Package"
+			]
+		],
+		"width": 449.0
+	},
+	"console":
+	{
+		"height": 126.0,
+		"history":
+		[
+			"import urllib.request,os,hashlib; h = 'eb2297e1a458f27d836c04bb0cbaf282' + 'd0e7a3098092775ccb37ca9d6b2e4b7d'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( 'http://packagecontrol.io/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); print('Error validating download (got %s instead of %s), please try manual install' % (dh, h)) if dh != h else open(os.path.join( ipp, pf), 'wb' ).write(by)"
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/home/marc/git/MI10_adversarial_training/presentation/AAUsidebartheme.tex",
+		"/home/marc/Downloads/image_tutorial-5.py",
+		"/home/marc/pylearn2/pylearn2/models/model.py",
+		"/home/marc/git/MI10_adversarial_training/training_test/MLP4/mlp1.yaml",
+		"/home/marc/git/MI10_adversarial_training/training_test/MLP4/dae1.yaml",
+		"/home/marc/git/MI10_adversarial_training/training_test/MLP4/costAdv.py",
+		"/home/marc/git/MI10_adversarial_training/training_test/MLP3/mlp1.yaml",
+		"/home/marc/git/motivationLetter.tex",
+		"/home/marc/git/cv/cv_12.tex",
+		"/home/marc/git/cv/deedy-resume.cls",
+		"/home/marc/Downloads/cvTemplate/cv_12.tex",
+		"/usr/share/texlive/texmf-dist/tex/latex/fontspec/fontspec.sty",
+		"/home/marc/git/cours/deedy-resume.cls",
+		"/home/marc/git/cours/cv.tex",
+		"/home/marc/git/MI10_adversarial_training/training_test/MLP3/model2.py",
+		"/home/marc/git/MI10_adversarial_training/training_test/MLP3/model.pyc",
+		"/home/marc/pylearn2/pylearn2/scripts/tutorials/dbm_demo/train_dbm.py",
+		"/home/marc/pylearn2/pylearn2/scripts/tutorials/dbm_demo/rbm.yaml",
+		"/home/marc/pylearn2/pylearn2/scripts/tutorials/dbm_demo/README",
+		"/home/marc/git/MI10_adversarial_training/training_test/MLP4/model2.py",
+		"/home/marc/pylearn2/pylearn2/models/mlp.py",
+		"/home/marc/pylearn2/pylearn2/scripts/tutorials/stacked_autoencoders/dae_mlp.yaml",
+		"/home/marc/pylearn2/pylearn2/scripts/tutorials/stacked_autoencoders/dae_l2.yaml",
+		"/home/marc/pylearn2/pylearn2/scripts/tutorials/stacked_autoencoders/dae_l1.yaml",
+		"/home/marc/git/MI10_adversarial_training/training_test/MLP3/covtype.py",
+		"/home/marc/git/MI10_adversarial_training/training_test/MLP3/README.txt",
+		"/home/marc/git/MI10_adversarial_training/training_test/MLP3/extract_debug.py",
+		"/home/marc/git/MI10_adversarial_training/training_test/log_reg.py",
+		"/home/marc/git/MI10_adversarial_training/training_test/MLP3/draw_images.py",
+		"/home/marc/git/MI10_adversarial_training/training_test/MLP3/m_draw.py",
+		"/home/marc/git/MI10_adversarial_training/training_test/MLP3/mlp11.yaml",
+		"/home/marc/git/MI10_adversarial_training/training_test/MLP3/m_train.py",
+		"/home/marc/git/MI10_adversarial_training/training_test/MLP3/mlp_cov.yaml",
+		"/home/marc/git/MI10_adversarial_training/training_test/MLP3/costAdv.py",
+		"/home/marc/git/MI10_adversarial_training/training_test/make_dataset.py",
+		"/home/marc/git/MI10_adversarial_training/training_test/MLP3/my_preprocessors.py",
+		"/home/marc/git/MI10_adversarial_training/training_test/MLP3/model.py",
+		"/home/marc/pylearn2/pylearn2/scripts/tutorials/multilayer_perceptron/README",
+		"/home/marc/pylearn2/pylearn2/datasets/dense_design_matrix.py",
+		"/home/marc/git/MI10_adversarial_training/training_test/MLP3/m_test.py",
+		"/home/marc/pylearn2/pylearn2/utils/serial.py",
+		"/home/marc/pylearn2/pylearn2/utils/string_utils.py",
+		"/home/marc/git/MI10_adversarial_training/training_test/MLP2/draw_images.py",
+		"/home/marc/git/MI10_adversarial_training/training_test/do_it_all.py",
+		"/tmp/bar_ex.py",
+		"/home/marc/git/MI10_adversarial_training/training_test/MLP3/covtypepy",
+		"/home/marc/git/MI10_adversarial_training/training_test/MLP3/TODO.txt",
+		"/home/marc/git/MI10_adversarial_training/training_test/imdb.py",
+		"/home/marc/Downloads/simple_plot.py",
+		"/home/marc/git/MI10_adversarial_training/report/running_ex5.py",
+		"/home/marc/git/MI10_adversarial_training/training_test/MLP3/m_drawpy",
+		"/home/marc/git/MI10_adversarial_training/training_test/MLP3/mlp88.yaml",
+		"/home/marc/git/MI10_adversarial_training/report/main.bib",
+		"/home/marc/git/MI10_adversarial_training/report/appendix.tex",
+		"/home/marc/git/MI10_adversarial_training/report/adversarial_learning.tex",
+		"/home/marc/git/MI10_adversarial_training/report/softmax.tex",
+		"/home/marc/git/MI10_adversarial_training/report/neural_networks.tex",
+		"/home/marc/git/MI10_adversarial_training/report/introduction.tex",
+		"/home/marc/git/MI10_adversarial_training/report/main.tex",
+		"/usr/lib/python2.7/dist-packages/numpy/matrixlib/defmatrix.py",
+		"/home/marc/git/MI10_adversarial_training/report/running_ex3.py",
+		"/home/marc/git/MI10_adversarial_training/report/running_ex4.py",
+		"/home/marc/git/MI10_adversarial_training/report/running_ex.py",
+		"/home/marc/git/MI10_adversarial_training/mail.tex",
+		"/home/marc/git/MI10_adversarial_training/training_test/MLP/extract_debug.py",
+		"/home/marc/git/latex/local.bib",
+		"/home/marc/git/latex/competition.tex",
+		"/home/marc/git/latex/conclusion.tex",
+		"/home/marc/git/latex/deep_learning_aalgo.tex",
+		"/home/marc/git/latex/implementation.tex",
+		"/home/marc/git/latex/model.tex",
+		"/home/marc/git/MI10_adversarial_training/report/running_ex2.py",
+		"/home/marc/pylearn2/pylearn2/costs/cost.py",
+		"/home/marc/git/prez.tex",
+		"/home/marc/git/latex/paper_presentation.tex",
+		"/home/marc/git/entrepreneurHW.tex",
+		"/home/marc/git/MI10_adversarial_training/training_test/costFunction.py",
+		"/home/marc/Desktop/pycharm-community-4.0.6/bin/pycharm",
+		"/home/marc/Desktop/pycharm-community-4.0.6/bin/pycharm.sh",
+		"/home/marc/pylearn2/pylearn2/scripts/show_weights.py",
+		"/home/marc/pylearn2/pylearn2/scripts/print_model.py",
+		"/home/marc/git/MI10_adversarial_training/training_test/MLP/mlp_test.yaml",
+		"/home/marc/git/MI10_adversarial_training/training_test/MLP/mlp.yaml",
+		"/home/marc/git/MI10_adversarial_training/training_test/MLP/out0.0.txt",
+		"/home/marc/git/MI10_adversarial_training/training_test/MLP/out0.1.txt",
+		"/home/marc/git/MI10_adversarial_training/training_test/MLP/out0.2.txt",
+		"/home/marc/git/MI10_adversarial_training/training_test/MLP/out0.3.txt",
+		"/home/marc/git/MI10_adversarial_training/training_test/MLP/Aout0.3.txt",
+		"/home/marc/git/MI10_adversarial_training/training_test/log_reg_test.yaml",
+		"/home/marc/git/MI10_adversarial_training/training_test/log_reg.yaml",
+		"/home/marc/git/MI10_adversarial_training/training_test/log_reg_test_adv.yaml",
+		"/home/marc/git/MI10_adversarial_training/training_test/log_reg_adv.yaml",
+		"/home/marc/git/MI10_adversarial_training/training_test/out2.txt",
+		"/home/marc/git/MI10_adversarial_training/training_test/out.txt",
+		"/home/marc/pylearn2/pylearn2/scripts/tutorials/grbm_smd/cifar_grbm_smd.yaml",
+		"/usr/local/lib/python2.7/dist-packages/theano/tensor/nnet/nnet.py",
+		"/home/marc/pylearn2/pylearn2/training_algorithms/bgd.py",
+		"/home/marc/pylearn2/pylearn2/scripts/tutorials/grbm_smd/make_dataset.py",
+		"/home/marc/pylearn2/pylearn2/datasets/preprocessing.py",
+		"/home/marc/pylearn2/pylearn2/space/__init__.py",
+		"/home/marc/pylearn2/pylearn2/datasets/dataset.py",
+		"/home/marc/pylearn2/pylearn2/train.py",
+		"/home/marc/pylearn2/pylearn2/scripts/show_binocular_greyscale_examples.py",
+		"/home/marc/pylearn2/pylearn2/models/dbm/dbm.py",
+		"/home/marc/pylearn2/pylearn2/training_algorithms/learning_rule.py",
+		"/home/marc/pylearn2/pylearn2/training_algorithms/__init__.py",
+		"/home/marc/pylearn2/pylearn2/training_algorithms/training_algorithm.py",
+		"/home/marc/pylearn2/pylearn2/scripts/tutorials/grbm_smd/tata.pkl",
+		"/home/marc/pylearn2/pylearn2/datasets/cifar10.py",
+		"/home/marc/pylearn2/pylearn2/models/autoencoder.py",
+		"/home/marc/pylearn2/pylearn2/models/maxout.py",
+		"/home/marc/pylearn2/pylearn2/models/model.pyc",
+		"/home/marc/git/MI10_adversarial_training/training_test/cifar10_preprocessed_train.pkl",
+		"/home/marc/git/MI10_adversarial_training/training_test/cifar_smb.yaml",
+		"/home/marc/git/MI10_adversarial_training/training_test/cifar_smb.pkl",
+		"/home/marc/git/cours/class3/liste_chainees.c",
+		"/home/marc/git/MI10_adversarial_training/training_test/tests.yaml",
+		"/home/marc/git/MI10_adversarial_training/training_test/test.py",
+		"/home/marc/pylearn2/pylearn2/datasets/mnist.py",
+		"/home/marc/pylearn2/pylearn2/scripts/papers/maxout/mnist_pi.yaml",
+		"/home/marc/.cache/.fr-tQHyW0/mvmp3",
+		"/home/marc/pylearn2/pylearn2/training_algorithms/sgd.py",
+		"/home/marc/pylearn2/pylearn2/scripts/papers/maxout/mnist.yaml",
+		"/media/marc/588E-ED93/export_tmp.txt",
+		"/media/marc/588E-ED93/export_tmp (copy).txt",
+		"/home/marc/git/latex/main.tex",
+		"/home/marc/git/cours/python/remoteView.py",
+		"/home/marc/git/cours/python/commandServer.py"
+	],
+	"find":
+	{
+		"height": 23.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": true,
+		"find_history":
+		[
+			"model.",
+			"10",
+			"d:",
+			"_2",
+			"ds_name",
+			"self",
+			"y_labels",
+			"_bin.pkl",
+			"_bin",
+			"x",
+			"self",
+			"X",
+			"test",
+			"\\",
+			"type",
+			"test",
+			"Set",
+			"Test_set",
+			"nb_neurons",
+			"Model_used",
+			"model_used",
+			"Model_used",
+			"model_used",
+			"Model_used",
+			"model_used",
+			"Model_used",
+			"model_used",
+			"Model_used",
+			"'",
+			"=",
+			"learning_eps",
+			"m_used",
+			"#",
+			"data",
+			"5",
+			"cifar",
+			"db",
+			"# plot_test_set_impact",
+			"modified_dataset",
+			"savefig",
+			"w_shape",
+			"400",
+			"mis",
+			"miss",
+			"sum",
+			"83",
+			"90",
+			"2f",
+			"95",
+			"1,2,5,",
+			"200, 400, 800, 1000",
+			"do_normal",
+			"1",
+			"plotting_instance",
+			"self",
+			"90",
+			"plotting_instance",
+			"self",
+			"1",
+			".",
+			"x",
+			"(X",
+			",5",
+			"5",
+			"array",
+			", ",
+			"predict",
+			"tmp",
+			"models_paths",
+			"ACC",
+			"', '",
+			"MNIST",
+			"a.",
+			"y_labels: 3,",
+			"10,",
+			"10",
+			"mnist_",
+			"_X",
+			"test_y",
+			"data.",
+			"(test_y.",
+			"test_y",
+			"train",
+			"a.",
+			"m_cmp",
+			"32",
+			"			  ",
+			" 			  ",
+			"[",
+			"32",
+			"), (",
+			"self.x",
+			"selfcost",
+			"True",
+			"get_adversarial_input",
+			"sample_nb",
+			"delta^1_j",
+			"fina",
+			"final",
+			"self.x",
+			"print \"-----",
+			"print \"\"",
+			"x",
+			"z",
+			"w",
+			"-----",
+			"set",
+			"s",
+			"Z2",
+			"10",
+			",",
+			"03",
+			"\\\\\\",
+			".",
+			"\\\\",
+			"& 10.0 \\\\\n				-10.002 	& 10.0 	& -10.0 \\\\\n				19.998 	& 10.0 	& 10.0 \\\\\n				\\end{matrix} \\right)",
+			"\\delta^1",
+			"\\delta_1",
+			"epsilon",
+			"delta",
+			"0",
+			" \\",
+			"sign",
+			" ",
+			"Finally, we",
+			"finally, we",
+			"13",
+			"1"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"sheets":
+			[
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 23.0
+	},
+	"input":
+	{
+		"height": 0.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"pinned_build_system": "",
+	"project": "AAUsidebartheme.sublime-project",
+	"replace":
+	{
+		"height": 42.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 500.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 380.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": true,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 150.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}
