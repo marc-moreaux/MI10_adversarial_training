@@ -370,7 +370,7 @@
 								\begin{split}
 									\frac{\partial a^l_j}{\partial z^l_j}
 									&= \frac{\partial \sigma(z^l_j)}{\partial z^l_j} \\
-									&= z^l_j (1-z^l_j)
+									&= a^l_j (1-a^l_j)
 								\end{split}
 							\end{equation}
 						}& \parbox{14em}{
@@ -378,29 +378,31 @@
 								\begin{split}
 									\frac{\partial \boldsymbol{a}^l}{\partial \boldsymbol{z}^l}
 									&= \frac{\partial \sigma(\boldsymbol{z}^l)}{\partial \boldsymbol{z}^l} \\
-									&= \boldsymbol{z}^l \circ (1-\boldsymbol{z}^l)
+									&= \boldsymbol{a}^l \circ (1-\boldsymbol{a}^l)
 								\end{split}
 							\end{equation}
 						}
 					\end{tabular}
-				\item \textbf{Derivative of the softmax neurons}: In the cost description (section \ref{sec:cost_function}), we mention a normalized input $\widetilde{\boldsymbol{p}}$ but didn't emphasize on it. This normalized input impacts the last layer of the network such that the derivatives of this layer are different than simple sigmoid neurons. That kind of layer is called a softmax layer and is often used when neural-networks when dealing with multi-class tasks. You'll find more information on this function on the "Pattern recognition and machine learning" book \cite{bishop2006pattern} starting on page 113. Right bellow we derive the outputs of these softmax neurons with their aggregated inputs. There is two cases to derive: the first one is when we differentiate the neuron $a^L_k$ that correspond to the true output $y_k=1$. The second is when we derive the other neurons $a^L_j$ that doesn't correspond to the true output $y_j=0$.
+				\item \textbf{Derivative of the softmax neurons}: In the cost description (section \ref{sec:cost_function}), we mention a normalized input $\widetilde{\boldsymbol{p}}$ but didn't emphasize on it. This normalized input impacts the last layer of the network such that the derivatives of this layer are different than simple sigmoid neurons. That kind of layer is called a softmax layer and is often used when neural-networks when dealing with multi-class tasks. You'll find more information on this function on the "Pattern recognition and machine learning" book \cite{bishop2006pattern} starting on page 113. Right bellow we derive the outputs of these softmax neurons with their aggregated inputs. There is two cases to derive: the first one is when we differentiate the neuron $a^L_j$ with respect to $z^L_j=1$. The second is when we derive the other neurons $a^L_j$ with respect to $z^L_m=0$.
 				\begin{itemize}
-					\item If $p_k$ corresponds to $y_k=1$
+					\item If $p_j$ is derived from its input $z^L_j$
 						\begin{equation}
 							\label{eq:softmax_deriv_1}
 							\begin{split}
-								\frac{\partial a^L_k}{\partial z^L_k}
-								&= \frac{\partial p_k}{\partial z^L_k} \\
-								&= p_k (1-p_k)
+								\frac{\partial a^L_j}{\partial z^L_j}
+								&= \frac{\partial p_j}{\partial z^L_j} \\
+								&= \frac{\partial (e^{z^L_j}/\sum_k e^{z^L_k})}{ \partial z^L_j} \\
+								&= p_j (1-p_j)
 							\end{split}
 						\end{equation}
-					\item If $p_j$ corresponds to $y_j=0$
+					\item IIf $p_j$ is derived from another input $z^L_m$
 						\begin{equation}
 							\label{eq:softmax_deriv_2}
 							\begin{split}
-								\frac{\partial a^L_j}{\partial z^L_j}
-								&= \frac{\partial p_j}{\partial z^L_j}\\
-								&= -p_j p_k
+								\frac{\partial a^L_j}{\partial z^L_m}
+								&= \frac{\partial p_j}{\partial z^L_m}\\
+								&= \frac{\partial (e^{z^L_m}/\sum_k e^{z^L_k})}{ \partial z^L_j} \\
+								&= -p_j p_m
 							\end{split}
 						\end{equation}
 				\end{itemize}
